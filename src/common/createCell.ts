@@ -4,7 +4,7 @@ export enum CellType {
     Bush,
 }
 
-type Cell = {
+export type Cell = {
     height: number;
     type: CellType;
 }
