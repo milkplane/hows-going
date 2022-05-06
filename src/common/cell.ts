@@ -9,11 +9,15 @@ export type Cell = {
     type: CellType;
 }
 
+export const copyCell = (cell: Cell): Cell => {
+    return {
+        ...cell,
+    };
+}
+
 const createCell = (height: number, type: CellType = CellType.Ground): Cell => {
     return {
         height,
         type,
-    }
+    };
 }
-
-export default createCell;
