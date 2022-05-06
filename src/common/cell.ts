@@ -15,7 +15,7 @@ export const copyCell = (cell: Cell): Cell => {
     };
 }
 
-const createCell = (height: number, type: CellType = CellType.Ground): Cell => {
+export const createCell = (height: number, type: CellType = CellType.Ground): Cell => {
     return {
         height,
         type,
