@@ -1,6 +1,6 @@
-import { CellType } from "./createCell";
+import { CellType } from "./cell";
 
-type Tool = {
+export type Tool = {
     size: number;
     instantHeightIncrease: number;
     increaseRate: number;
