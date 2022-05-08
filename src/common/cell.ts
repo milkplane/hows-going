@@ -15,14 +15,14 @@ export const copyCell = (cell: Cell): Cell => {
     };
 }
 
-const TOO_HIGH_FOR_WATER = 0;
-const TOO_HIGH_FOR_BUSH = 0.3;
-const TOO_LOW_FOR_BUSH = -0.1;
+const MAX_WATER_HEIGHT = 0 - Number.EPSILON;
+const MIN_BUSH_HEIGHT = -0.1 - Number.EPSILON;
+const MAX_BUSH_HEIGHT = 0.3 - Number.EPSILON;
 
 const getVerifiedType = (height: number, type: CellType): CellType => {
-    if (type === CellType.Bush && height >= TOO_HIGH_FOR_BUSH ||
-        type === CellType.Bush && height <= TOO_LOW_FOR_BUSH ||
-        type === CellType.Water && height >= TOO_HIGH_FOR_WATER) {
+    if (type === CellType.Bush && height > MAX_BUSH_HEIGHT ||
+        type === CellType.Bush && height < MIN_BUSH_HEIGHT ||
+        type === CellType.Water && height > MAX_WATER_HEIGHT) {
         return CellType.Ground;
     }
 
