@@ -70,7 +70,7 @@ export const changeCellHeight = (cell: Cell, height: number): Cell => {
     }
 }
 
-export const createCell = (height: number, type: CellType = CellType.Ground): Cell => {
+export const createCell = (height: number = 0, type: CellType = CellType.Ground): Cell => {
     const cell: Cell = {
         height: 0,
         type: type
