@@ -10,12 +10,22 @@ export type MapChange = {
     newCell: Cell;
 }
 
-type Press = {
-    coords: Coords;
-    force: number;
+export type Size = {
+    width: number;
+    height: number;
 }
 
+export type MapCreator = (size: Size) => MapData;
+
 export type MapChanges = MapChange[];
+
+export const formMap = (cellMatrix: Cell[][]): MapData => {
+    return cellMatrix;
+}
+
+export const createMap = (create: MapCreator, size: Size) => {
+    return create(size);    
+}
 
 export const copyMap = (map: MapData): MapData => {
     return map.map(row => {
