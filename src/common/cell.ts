@@ -18,16 +18,27 @@ export const copyCell = (cell: Cell): Cell => {
 const MAX_WATER_HEIGHT = 0 - Number.EPSILON;
 const MIN_BUSH_HEIGHT = -0.1 - Number.EPSILON;
 const MAX_BUSH_HEIGHT = 0.3 - Number.EPSILON;
+const MIN_HEIGHT = -1;
+const MAX_HEIGHT = 1;
+
+const getAcceptableHeight = (height: number): number => {
+    if (height > MAX_HEIGHT) return MAX_HEIGHT;
+    if (height < MIN_HEIGHT) return MAX_HEIGHT;
+
+    return height;
+}
 
 const getVerifiedHeight = (height: number, type: CellType): number => {
+    const newHeight = getAcceptableHeight(height);
+
     if (type === CellType.Bush) {
-        if (height > MAX_BUSH_HEIGHT) return MAX_BUSH_HEIGHT;
-        if (height < MIN_BUSH_HEIGHT) return MAX_BUSH_HEIGHT;
-    } else if (type === CellType.Water && height > MAX_WATER_HEIGHT) {
+        if (newHeight > MAX_BUSH_HEIGHT) return MAX_BUSH_HEIGHT;
+        if (newHeight < MIN_BUSH_HEIGHT) return MAX_BUSH_HEIGHT;
+    } else if (type === CellType.Water && newHeight > MAX_WATER_HEIGHT) {
         return MAX_WATER_HEIGHT;
     }
 
-    return height;
+    return newHeight;
 }
 
 const shouldBeGround = (height: number, type: CellType): boolean => {
@@ -44,11 +55,26 @@ const getVerifiedType = (height: number, type: CellType): CellType => {
     return type;
 }
 
-export const createCell = (height: number, type: CellType = CellType.Ground): Cell => {
-    const newHeight = getVerifiedHeight(height, type);
-    const newType = getVerifiedType(newHeight, type);
+export const changeCellType = (cell: Cell, type: CellType): Cell => {
     return {
-        height: newHeight, 
-        type: newType,
-    };
+        height: getVerifiedHeight(cell.height, type),
+        type: type,
+    }
+}
+
+export const changeCellHeight = (cell: Cell, height: number): Cell => {
+    const newHeight = getAcceptableHeight(height);
+    return {
+        height: newHeight,
+        type: getVerifiedType(newHeight, cell.type),
+    }
+}
+
+export const createCell = (height: number, type: CellType = CellType.Ground): Cell => {
+    const cell: Cell = {
+        height: 0,
+        type: type
+    }
+
+    return changeCellHeight(cell, height); 
 }
