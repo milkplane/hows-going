@@ -1,5 +1,6 @@
 import { Cell, createCell } from "../../../common/cell"
-import { formMap, MapCreator, Size } from "../../../common/map"
+import { formMap, MapCreator } from "../../../common/map"
+import { Size } from "../../../common/size";
 
 const createFlatRow = (width: number): Cell[] => {
     const row: Cell[] = [];

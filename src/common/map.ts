@@ -1,6 +1,7 @@
 import { Cell, changeCellHeight, changeCellType, copyCell } from "./cell";
 import { Coords } from "./coords";
 import { Tool } from "./createTool";
+import { Size } from "./size";
 import { arrayFromTree, createTree, expandTree } from "./tree";
 
 export type MapData = Cell[][];
@@ -8,11 +9,6 @@ export type MapData = Cell[][];
 export type MapChange = {
     coords: Coords;
     newCell: Cell;
-}
-
-export type Size = {
-    width: number;
-    height: number;
 }
 
 export type MapCreator = (size: Size) => MapData;
