@@ -34,6 +34,9 @@ const mapSlice = createSlice({
             state.size = action.payload;
             state.map = state.createNewMap(action.payload); //side effect
         },
+        toolChanged(state, action: PayloadAction<Tool>) {
+            state.tool = action.payload;
+        }
     }
 })
 
