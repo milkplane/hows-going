@@ -33,3 +33,8 @@ export const createShiftedCoords = (coords: Coords, shift: CoordsShift): Coords 
             return createCoords(coords.i, coords.j + 1);
     }
 }
+
+export const areEqualCoords = (coords1: Coords, coords2: Coords) => {
+    return coords1.i == coords2.i &&
+    coords1.j == coords2.j
+}
