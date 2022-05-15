@@ -1,6 +1,6 @@
 import { Coords, CoordsShift, createShiftedCoords, stringifyCoords } from "./coords";
 
-type Tree = {
+export type Tree = {
     coords: Coords
     parent: Tree | null;
     descendants: Tree[];
@@ -46,28 +46,27 @@ export const expandTree = (root: Tree, expandCount: number, canExpandTo: Expanda
     const takenCoords: string[] = [stringifyCoords(root.coords)];
     const canExpandAndNotTaken = (coords: Coords) => {
         return canExpandTo(coords) &&
-        !takenCoords.includes(stringifyCoords(coords));
+            !takenCoords.includes(stringifyCoords(coords));
     }
     let queue: Tree[] = [root];
-    
+
     for (let i = 0; i < expandCount && queue.length !== 0; i++) {
         let queueBeforeNextExpand = queue;
         queue = [];
 
         while (queueBeforeNextExpand.length !== 0) {
             const current = queueBeforeNextExpand.shift() as Tree;
-    
+
             const descendants = createDescendants(current, canExpandAndNotTaken);
-    
+
             descendants.forEach(descendant => takenCoords.push(stringifyCoords(descendant.coords)));
-    
+
             queue.push(...descendants);
         }
     }
 
     return root;
 }
-
 
 export const arrayFromTree = <T>(tree: Tree, getValueBasedOnDepth: GetValueBasedOnDepth<T>, depth = 1): MappedInfo<T>[] => {
     const mappedValue = getValueBasedOnDepth(depth);
@@ -83,4 +82,21 @@ export const arrayFromTree = <T>(tree: Tree, getValueBasedOnDepth: GetValueBased
     });
 
     return mappedInfos;
+}
+
+export const getPathToRoot = (tree: Tree) => {
+    const stack = [];
+    let currentTree: Tree | null = tree;
+
+    while (currentTree !== null) {
+        stack.unshift(currentTree.coords);
+        currentTree = currentTree.parent;
+    }
+
+    return stack[Symbol.iterator]();
+}
+
+export const areEqualTree = (tree1: Tree, tree2: Tree) => {
+    return tree1.coords.i === tree2.coords.i &&
+    tree1.coords.j === tree2.coords.j;
 }
