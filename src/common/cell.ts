@@ -78,3 +78,9 @@ export const createCell = (height: number = 0, type: CellType = CellType.Ground)
 
     return changeCellHeight(cell, height); 
 }
+
+export const getRoughness = (cell: Cell, waterMultiplier: number = 50) => {
+    if (cell.type === CellType.Water) return  cell.height * waterMultiplier + waterMultiplier;
+
+    return cell.height + 1;
+}
