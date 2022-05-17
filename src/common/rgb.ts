@@ -27,3 +27,26 @@ export const getColorBetween = (color1: RGB, color2: RGB, shift: number) => {
         color2.blue - blueShift,
     )
 }
+
+export type Gradient = {
+    pointColors: RGB[];
+}
+
+export const createGradient = (...colors: RGB[]): Gradient => {
+    return {
+        pointColors: colors,
+    }
+}
+
+export const getGradientColor = (gradient: Gradient, shift: number) => {
+    if (gradient.pointColors.length === 1) {
+        return gradient.pointColors[0];
+    }
+
+    const shiftInGradient = (gradient.pointColors.length - 1) * shift; // -1 Last color shouldnt be taken 
+    const colorIndex = Math.floor(shiftInGradient);
+    const shiftInColor = shiftInGradient - colorIndex;
+    const secondColorIndex = colorIndex + 1;
+
+    return getColorBetween(gradient.pointColors[colorIndex], gradient.pointColors[secondColorIndex], shiftInColor);
+}
