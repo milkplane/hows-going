@@ -1,21 +1,12 @@
 import { areEqualCoords, Coords, stringifyCoords } from "../../../common/coords";
 import { isInMap, MapData } from "../../../common/map";
 import { areEqualTree, createTree, expandTree, getPathToRoot, Tree } from "../../../common/tree";
+import { HeuristicFunction, WeightGetter } from "../mapSlice";
 import matrixFinder from "./findingFeatures/matrixFinder";
 import prioritized from "./findingFeatures/prioritized";
 
-type HeuristicFunction = (current: Coords, end: Coords) => number;
-
-type WeightGetter = (coords: Coords) => number;
-
 type MappedCoords = {
     [key: string]: number;
-}
-
-export const ignoredHeuristic: HeuristicFunction = () => 0;
-export const ignoredWeight: WeightGetter = () => 0;
-export const manhattanDistance: HeuristicFunction = (current: Coords, end: Coords) => {
-    return Math.abs(current.i - end.i) + Math.abs(current.j - end.j);
 }
 
 const getFindingGenerator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => {
@@ -40,7 +31,7 @@ const getFindingGenerator = (getHeuristic: HeuristicFunction, getWeight: WeightG
             markAsTaken(current?.coords);
 
             for (let descendant of expandTree(current, 1, canExpandTo).descendants) {
-                const pathLength = pathLengths[stringifyCoords(current.coords)] + getWeight(descendant.coords) + 1;
+                const pathLength = pathLengths[stringifyCoords(current.coords)] + getWeight(map, descendant.coords) + 1;
 
                 if (isInQueue(descendant) && pathLength >= pathLengths[stringifyCoords(descendant.coords)]) continue;
 
