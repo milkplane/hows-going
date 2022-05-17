@@ -73,3 +73,7 @@ export const createAppliedToolMap = (map: MapData, tool: Tool, coords: Coords): 
 
     return copiedMap;
 }
+
+export const getCell = (map: MapData, coords: Coords) => {
+    return map[coords.i][coords.j]
+}
