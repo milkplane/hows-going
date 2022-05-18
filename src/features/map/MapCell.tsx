@@ -1,8 +1,10 @@
 import { useAppSelector } from "../../app/hooks";
 import { CellColorGetter, CellType, getCellColor, getRoughness } from "../../common/cell";
-import { createCoords } from "../../common/coords";
+import { areEqualCoords, createCoords } from "../../common/coords";
 import { getCell } from "../../common/map";
-import styled from "styled-components";
+import endImage from '../../images/treasure-chest.png'
+import startImage from '../../images/person.png'
+import styled, { css } from "styled-components";
 import { createColor, createGradient, createGradientPoint, stringifyColor } from "../../common/rgb";
 
 type CellCoords = {
@@ -14,6 +16,23 @@ const Tile = styled.td`
     background-color: ${props => props.color};
     min-width: 50px;
     height: 50px;
+    display: inline-flex;
+`
+
+const gameObject = css`
+    background-size: cover;
+    flex: 1;
+    margin: 10%;
+`
+
+const StartImage = styled.div`
+    ${gameObject}
+    background-image: url(${startImage});
+`
+
+const EndImage = styled.div`
+    ${gameObject}
+    background-image: url(${endImage});
 `
 
 const groundColor = createGradient(
@@ -47,7 +66,12 @@ const MapCell = (props: CellCoords) => {
     const roughness = useAppSelector(state => getRoughness(getCell(state.map.map, coords)));
     const type = useAppSelector(state => getCell(state.map.map, coords).type)
     const terrainColor = getCellColor(cell, getTypedColor);
-    return <Tile color={stringifyColor(terrainColor)}/>
+    const start = useAppSelector(state => state.map.start);
+    const end = useAppSelector(state => state.map.end);
+    return <Tile color={stringifyColor(terrainColor)}>
+        {areEqualCoords(coords, start) ? <StartImage /> : null}
+        {areEqualCoords(coords, end) ? <EndImage /> : null}
+    </Tile>
 }
 
 export default MapCell;
