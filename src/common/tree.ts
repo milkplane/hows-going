@@ -47,17 +47,19 @@ export const expandTree = (root: Tree, expandCount: number, canExpandTo: Expanda
     const canExpandAndNotTaken = (coords: Coords) => {
         return canExpandTo(coords) &&
             !takenCoords.includes(stringifyCoords(coords));
+
     }
     let queue: Tree[] = [root];
 
     for (let i = 0; i < expandCount && queue.length !== 0; i++) {
-        let queueBeforeNextExpand = queue;
+        let queueBeforeNextExpand = [...queue];
         queue = [];
 
         while (queueBeforeNextExpand.length !== 0) {
             const current = queueBeforeNextExpand.shift() as Tree;
 
             const descendants = createDescendants(current, canExpandAndNotTaken);
+            current.descendants = descendants;
 
             descendants.forEach(descendant => takenCoords.push(stringifyCoords(descendant.coords)));
 
@@ -75,10 +77,10 @@ export const arrayFromTree = <T>(tree: Tree, getValueBasedOnDepth: GetValueBased
         coords: tree.coords
     }
 
-    const mappedInfos: MappedInfo<T>[] = [mappedInfo];
+    let mappedInfos: MappedInfo<T>[] = [mappedInfo];
 
     tree.descendants.forEach(descendant => {
-        mappedInfos.concat(arrayFromTree(descendant, getValueBasedOnDepth, depth + 1));
+        mappedInfos = mappedInfos.concat(arrayFromTree(descendant, getValueBasedOnDepth, depth + 1));
     });
 
     return mappedInfos;
@@ -98,5 +100,5 @@ export const getPathToRoot = (tree: Tree) => {
 
 export const areEqualTree = (tree1: Tree, tree2: Tree) => {
     return tree1.coords.i === tree2.coords.i &&
-    tree1.coords.j === tree2.coords.j;
+        tree1.coords.j === tree2.coords.j;
 }
