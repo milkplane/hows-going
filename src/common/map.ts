@@ -1,4 +1,4 @@
-import { Cell, changeCellHeight, changeCellType, copyCell } from "./cell";
+import { Cell, changeCellHeight, changeCellType, copyCell, increaseCellHeight } from "./cell";
 import { Coords } from "./coords";
 import { Tool } from "./createTool";
 import { Size } from "./size";
@@ -48,7 +48,7 @@ const getChangesFromTool = (map: MapData, tool: Tool, coords: Coords): MapChange
     const pressureInfos = arrayFromTree<number>(areaRoot, getPressure);
     return pressureInfos.map((info) => {
         const tooledHeight = tool.instantHeightIncrease + info.mappedValue;
-        const cell = changeCellHeight(map[info.coords.i][info.coords.j], tooledHeight);
+        const cell = increaseCellHeight(map[info.coords.i][info.coords.j], tooledHeight);
 
         if (tool.brushType) {
             return {
