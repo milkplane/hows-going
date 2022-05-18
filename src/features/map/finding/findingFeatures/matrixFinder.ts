@@ -5,7 +5,7 @@ const matrixFinder = (map: MapData) => {
     const takenCoords: { [key: string]: boolean } = {};
 
     const isAlreadyTaken = (coords: Coords) => {
-        return takenCoords[stringifyCoords(coords)];
+        return takenCoords[stringifyCoords(coords)] || false;
     }
 
     const markAsTaken = (coords: Coords) => {
