@@ -1,3 +1,4 @@
+import { MouseEvent } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -17,7 +18,8 @@ const Map = (props: any) => {
         rows.push(<MapRow key={i} row={i} onCellChanged={setHoveredCell} />)
     }
 
-    const onMapPressed = () => {
+    const onMapPressed = (event: MouseEvent<HTMLTableSectionElement>) => {
+        event.preventDefault();
         setIsMapPressed(true);
         document.addEventListener('mouseup', () => setIsMapPressed(false));
     }
