@@ -1,6 +1,6 @@
 import { useAppSelector } from "../../app/hooks";
 import { CellColorGetter, CellType, getCellColor, getRoughness } from "../../common/cell";
-import { areEqualCoords, createCoords } from "../../common/coords";
+import { areEqualCoords, Coords, createCoords } from "../../common/coords";
 import { getCell } from "../../common/map";
 import endImage from '../../images/treasure-chest.png'
 import startImage from '../../images/person.png'
@@ -10,6 +10,7 @@ import { createColor, createGradient, createGradientPoint, stringifyColor } from
 type CellCoords = {
     row: number;
     column: number;
+    onCellChanged: (coords: Coords) => any;
 }
 
 const Tile = styled.td`
@@ -68,7 +69,13 @@ const MapCell = (props: CellCoords) => {
     const terrainColor = getCellColor(cell, getTypedColor);
     const start = useAppSelector(state => state.map.start);
     const end = useAppSelector(state => state.map.end);
-    return <Tile color={stringifyColor(terrainColor)}>
+
+    const handleCellChanged = () => {
+        console.log('changed');
+        props.onCellChanged(createCoords(props.row, props.column));
+    }
+
+    return <Tile color={stringifyColor(terrainColor)} onMouseEnter={handleCellChanged}>
         {areEqualCoords(coords, start) ? <StartImage /> : null}
         {areEqualCoords(coords, end) ? <EndImage /> : null}
     </Tile>
