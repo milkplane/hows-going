@@ -1,3 +1,5 @@
+import { getGradientColor, Gradient } from "./rgb";
+
 export enum CellType {
     Ground,
     Water,
@@ -8,6 +10,8 @@ export type Cell = {
     height: number;
     type: CellType;
 }
+
+export type CellColorGetter = (type: CellType) => Gradient;
 
 export const copyCell = (cell: Cell): Cell => {
     return {
@@ -83,4 +87,31 @@ export const getRoughness = (cell: Cell, waterMultiplier: number = 50) => {
     if (cell.type === CellType.Water) return  cell.height * waterMultiplier + waterMultiplier;
 
     return cell.height + 1;
+}
+
+export const getShiftInHeight = (cell: Cell) => {
+
+    let minHeight = MIN_HEIGHT;
+    let maxHeight = MAX_HEIGHT;
+
+    switch (cell.type) {
+        case CellType.Bush: {
+            minHeight = MIN_BUSH_HEIGHT;
+            maxHeight = MAX_BUSH_HEIGHT;
+            break;
+        }
+        case CellType.Water: {
+            minHeight = MIN_HEIGHT;
+            maxHeight = MAX_WATER_HEIGHT;
+            break;
+        }
+    }
+
+    return Math.abs((cell.height - minHeight) / (maxHeight - minHeight));
+}
+
+export const getCellColor = (cell: Cell, getGradient: CellColorGetter) => {
+    const color = getGradient(cell.type);
+    const shift = getShiftInHeight(cell);
+    return getGradientColor(color, shift);    
 }
