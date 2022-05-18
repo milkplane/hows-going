@@ -13,18 +13,18 @@ export const createColor = (red: number, green: number, blue: number) => {
 }
 
 const getShiftedPrimaryColor = (color1: number, color2: number, shift: number) => {
-    return (color2 - color1) * shift
+    return (color2 - color1) * shift + color1;
 }
 
 export const getColorBetween = (color1: RGB, color2: RGB, shift: number) => {
     const redShift = getShiftedPrimaryColor(color1.red, color2.red, shift);
-    const greenShift = getShiftedPrimaryColor(color1.red, color2.red, shift);
-    const blueShift = getShiftedPrimaryColor(color1.red, color2.red, shift);
+    const greenShift = getShiftedPrimaryColor(color1.green, color2.green, shift);
+    const blueShift = getShiftedPrimaryColor(color1.blue, color2.blue, shift);
 
     return createColor(
-        color2.red - redShift,
-        color2.green - greenShift,
-        color2.blue - blueShift,
+        redShift,
+        greenShift,
+        blueShift
     )
 }
 
