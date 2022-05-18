@@ -2,10 +2,11 @@ import { createSlice, current, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { CellType, getRoughness } from "../../common/cell";
 import { Coords, createCoords } from "../../common/coords";
 import createTool, { Tool } from "../../common/createTool";
-import { createAppliedToolMap, createMap, getCell, MapCreator, MapData } from "../../common/map";
+import { createAppliedToolMap, createMap, getCell, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
+import { searchStarted } from "../findingFlow/findingFlowSlice";
 import flat from "./creators/flat";
-import getFindingGenerator from "./findingGenerators/getFingingGenerator";
+import getSeeker from "./finding/getSeeker";
 
 // Cant be split into findingSlice and mapSlice
 // finding generator or a function of the form (map, start, end) => [ checkedCoords: Coords[], path: Coords[] ]
@@ -17,19 +18,20 @@ export type HeuristicFunction = (current: Coords, end: Coords) => number;
 
 export type WeightGetter = (map: MapData, coords: Coords) => number;
 
-export type FindingConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => FindingGeneratorGetter;
+export type SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => Seeker;
 
-type FindingGeneratorGetter = (map: MapData, start: Coords, end: Coords) => FindingGenerator;
+export type Seeker = (map: MapData, start: Coords, end: Coords) => SearchResult;
 
-type FindingGenerator = Generator<Coords, Path>
+export type SearchResult = [
+    checked: Coords[],
+    path: Coords[]
+]
 
-type Path = Iterator<Coords>;
-
-type FindingInfoTable = {
-    [key: string]: FindingCoordsInfo;
+type SearchInfoTable = {
+    [key: string]: SearchCoordsInfo;
 }
 
-type FindingCoordsInfo = {
+type SearchCoordsInfo = {
     isPath: boolean;
     isViewed: boolean;
 }
@@ -38,11 +40,11 @@ type MapState = {
     map: MapData;
     size: Size;
     tool: Tool;
-    createNewMap: MapCreator;
     start: Coords;
     end: Coords;
-    findingCoordsInfo: FindingInfoTable;
-    finder: FindingGenerator;
+    visited: Coords[];
+    path: Coords[];
+    findingCoordsInfo: SearchInfoTable;
     greed: number;
 }
 
@@ -76,17 +78,18 @@ const initialStart = createCoords(0, 0);
 const initialEnd = createCoords(0, 2);
 const initialGreed = 0.5; // 0 = Dijkstra's; 0.5 = A*; 1 = GBFS
 const [initialGetHeuristic, initialGetWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, 0.5);
-const inititalGetFinder = getFindingGenerator(initialGetHeuristic, initialGetWeight);
+const inititalSeeker = getSeeker(initialGetHeuristic, initialGetWeight);
+const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, initialEnd);
 
 const initialState: MapState = {
     size: initialSize,
     map: initialMap,
     tool: createTool(3, 0.2, 0.01, CellType.Ground),
-    createNewMap: flat,
     start: initialStart,
     end: initialEnd,
+    visited: initialVisited,
+    path: InitialPath,
     findingCoordsInfo: {},
-    finder: inititalGetFinder(initialMap, initialStart, initialEnd),
     greed: initialGreed,
 };
 
@@ -94,53 +97,38 @@ const mapSlice = createSlice({
     initialState,
     name: 'map',
     reducers: {
-        // code duplication
-        // too complicated logic
         toolApplied(state, action: PayloadAction<Coords>) {
-            const map = createAppliedToolMap(state.map, state.tool, action.payload);
-            const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
-            state.finder = getFindingGenerator(getHeuristic, getWeight)(map, state.start, state.end);
+            state.map = createAppliedToolMap(state.map, state.tool, action.payload);
         },
-        mapCreatorChanged(state, action: PayloadAction<MapCreator>) {
-            const map = action.payload(state.size);
-            const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed); //
-            state.finder = getFindingGenerator(getHeuristic, getWeight)(map, state.start, state.end);
-        },
-        mapSizeChanged(state, action: PayloadAction<Size>) {
-            state.size = action.payload;
-            const map = state.createNewMap(action.payload);
-            const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
-            state.finder = getFindingGenerator(getHeuristic, getWeight)(map, state.start, state.end);
+        mapChanged(state, action: PayloadAction<MapData>) {
+            state.map = action.payload;
         },
         toolChanged(state, action: PayloadAction<Tool>) {
             state.tool = action.payload;
         },
         greedChanged(state, action: PayloadAction<number>) {
             state.greed = action.payload;
-            const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, action.payload);
-            state.finder = getFindingGenerator(getHeuristic, getWeight)(state.map, state.start, state.end);
         },
         startChanged(state, action: PayloadAction<Coords>) {
             state.start = action.payload;
-            const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
-            state.finder = getFindingGenerator(getHeuristic, getWeight)(state.map, action.payload, state.end);
         },
         endChanged(state, action: PayloadAction<Coords>) {
             state.end = action.payload;
-            const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
-            state.finder = getFindingGenerator(getHeuristic, getWeight)(state.map, action.payload, action.payload);
         },
     },
     extraReducers: (builder) => {
-        builder.addMatcher(isAnyOf(toolApplied, mapCreatorChanged, mapSizeChanged,
-            toolChanged, greedChanged, startChanged, endChanged), (state) => {
+        builder.addCase(searchStarted, (state, action) => {
+            const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
+            [state.visited, state.path] = getSeeker(getHeuristic, getWeight)(state.map, state.start, state.end);
+        })
+        builder.addMatcher(isAnyOf(toolApplied, toolChanged, greedChanged,
+            startChanged, endChanged), (state) => {
                 state.findingCoordsInfo = {};
             })
     }
 })
 
-export const { toolApplied, mapCreatorChanged, mapSizeChanged,
-    toolChanged, greedChanged, startChanged,
-    endChanged } = mapSlice.actions;
+export const { toolApplied, toolChanged, greedChanged,
+    startChanged, endChanged } = mapSlice.actions;
 
 export default mapSlice.reducer;

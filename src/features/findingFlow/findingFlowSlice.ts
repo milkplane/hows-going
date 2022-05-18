@@ -1,5 +1,5 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { endChanged, greedChanged, mapCreatorChanged, mapSizeChanged, startChanged, toolApplied } from "../map/mapSlice";
+import { endChanged, greedChanged, startChanged, toolApplied } from "../map/mapSlice";
 
 type FindingFlowState = {
     isSearhing: boolean;
@@ -30,8 +30,7 @@ const findingFlowSlice = createSlice({
     },
     extraReducers: (builder) =>
         builder
-            .addMatcher(isAnyOf(toolApplied, mapSizeChanged, mapCreatorChanged
-                , greedChanged, startChanged, endChanged), (state, action) => {
+            .addMatcher(isAnyOf(toolApplied, greedChanged, startChanged, endChanged), (state, action) => {
                     state.isSearhing = false;
                     state.isDrawingPath = true;
                 })

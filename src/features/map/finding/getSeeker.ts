@@ -1,7 +1,7 @@
 import { areEqualCoords, Coords, stringifyCoords } from "../../../common/coords";
 import { isInMap, MapData } from "../../../common/map";
 import { areEqualTree, createTree, expandTree, getPathToRoot, Tree } from "../../../common/tree";
-import { HeuristicFunction, WeightGetter } from "../mapSlice";
+import { HeuristicFunction, SearchConfigurator, SearchResult, WeightGetter } from "../mapSlice";
 import matrixFinder from "./findingFeatures/matrixFinder";
 import prioritized from "./findingFeatures/prioritized";
 
@@ -9,8 +9,10 @@ type MappedCoords = {
     [key: string]: number;
 }
 
-const getFindingGenerator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => {
-    return function* (map: MapData, start: Coords, end: Coords) {
+const getSeeker: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => {
+    const checked: Coords[] = [];
+    const path: Coords[] = [];
+    return function (map: MapData, start: Coords, end: Coords): SearchResult {
         const { markAsTaken, isAlreadyTaken } = matrixFinder(map);
         const { addToQueue, isInQueue, isQueueEmpty, extractHighestPriority, updatePriority } = prioritized<Tree>(areEqualTree);
         const canExpandTo = (coords: Coords) => isInMap(coords, map) && isAlreadyTaken(coords);
@@ -24,8 +26,12 @@ const getFindingGenerator = (getHeuristic: HeuristicFunction, getWeight: WeightG
             const current = extractHighestPriority();
 
             if (areEqualCoords(current?.coords, end)) {
-                yield current?.coords;
-                return getPathToRoot(current);
+                checked.push(current?.coords);
+                path.push(current.coords);
+                return [
+                    checked,
+                    path,
+                ];
             }
 
             markAsTaken(current?.coords);
@@ -46,11 +52,14 @@ const getFindingGenerator = (getHeuristic: HeuristicFunction, getWeight: WeightG
                 }
             }
 
-            yield current.coords;
+            checked.push(current.coords);
         }
 
-        return ([] as Coords[])[Symbol.iterator]();
+        return [
+            checked,
+            path
+        ];
     }
 }
 
-export default getFindingGenerator;
+export default getSeeker;
