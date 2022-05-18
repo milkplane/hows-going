@@ -15,7 +15,7 @@ const getSeeker: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeigh
     return function (map: MapData, start: Coords, end: Coords): SearchResult {
         const { markAsTaken, isAlreadyTaken } = matrixFinder(map);
         const { addToQueue, isInQueue, isQueueEmpty, extractHighestPriority, updatePriority } = prioritized<Tree>(areEqualTree);
-        const canExpandTo = (coords: Coords) => isInMap(coords, map) && isAlreadyTaken(coords);
+        const canExpandTo = (coords: Coords) => isInMap(coords, map) && !isAlreadyTaken(coords);
         const pathLengths: MappedCoords = {};
 
         const root = createTree(start);
