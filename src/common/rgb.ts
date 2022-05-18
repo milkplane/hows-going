@@ -50,3 +50,7 @@ export const getGradientColor = (gradient: Gradient, shift: number) => {
 
     return getColorBetween(gradient.pointColors[colorIndex], gradient.pointColors[secondColorIndex], shiftInColor);
 }
+
+export const stringifyColor = (color: RGB) => {
+    return `rgb(${color.red}, ${color.green}, ${color.blue})`;
+}
