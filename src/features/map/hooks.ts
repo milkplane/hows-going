@@ -2,9 +2,9 @@ import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { MouseEvent } from "react";
 import { useEffect } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { areEqualCoords, Coords } from "../../common/coords";
-import { toolApplied } from "./mapSlice";
+import { oneStepSearch, toolApplied } from "./mapSlice";
 
 export const useTool = (coords: Coords) => {
     const dispatch = useAppDispatch();
@@ -58,4 +58,26 @@ export const useGameObjectDrag = (objectPosition: Coords, hoveredCell: Coords, o
 
 
     return onGameObjectPressed;
+}
+
+
+export const useSearch = (rate: number) => {
+    const isSearhing = useAppSelector(state => state.map.isSearhing);
+    const isPavingWay = useAppSelector(state => state.map.isPavingWay)
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (!isSearhing && !isPavingWay) return;
+
+        const timer = setInterval(() => {
+            dispatch(oneStepSearch());
+        }, 1000 / rate)
+
+
+        return () => {
+            clearInterval(timer);
+        }
+        
+
+    }, [isSearhing, isPavingWay, rate])
 }

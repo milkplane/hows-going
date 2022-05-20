@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { MouseEvent } from "react";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import { areEqualCoords, Coords, createCoords } from "../../common/coords";
-import { useGameObjectDrag, useTool } from "./hooks";
+import { useGameObjectDrag, useSearch, useTool } from "./hooks";
 import MapRow from "./MapRow";
 import { endChanged, startChanged } from "./mapSlice";
 
@@ -15,6 +14,7 @@ const Map = (props: any) => {
     const end = useAppSelector(state => state.map.end);
     const handleStartPressed = useGameObjectDrag(start, hoveredCell, startChanged);
     const handleEngChanging = useGameObjectDrag(end, hoveredCell, endChanged);
+    useSearch(60);
 
     const onMapPressed = (event: MouseEvent<HTMLTableSectionElement>) => {
         if (areEqualCoords(hoveredCell, start)) {
