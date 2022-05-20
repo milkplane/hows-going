@@ -159,6 +159,6 @@ const mapSlice = createSlice({
 })
 
 export const { toolApplied, toolChanged, greedChanged,
-    startChanged, endChanged, oneStepSearch } = mapSlice.actions;
+    startChanged, endChanged, oneStepSearch, searchStarted } = mapSlice.actions;
 
 export default mapSlice.reducer;
