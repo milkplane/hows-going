@@ -1,18 +1,16 @@
 import { createSlice, current, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { CellType, getRoughness } from "../../common/cell";
-import { Coords, createCoords } from "../../common/coords";
+import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import createTool, { Tool } from "../../common/createTool";
 import { createAppliedToolMap, createMap, getCell, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
-import { searchStarted } from "../findingFlow/findingFlowSlice";
 import flat from "./creators/flat";
 import getSeeker from "./finding/getSeeker";
 
-// Cant be split into findingSlice and mapSlice
+// do not split mapSlice into findingSlice/mapSlice/findingFlowSlice
 // finding generator or a function of the form (map, start, end) => [ checkedCoords: Coords[], path: Coords[] ]
 // needs to know the map (after creating map, tool applying, size changing, basically every available action)
 // but slice only have access to the section of state that they own
-// not using combine reducers makes code cumbersome
 
 export type HeuristicFunction = (current: Coords, end: Coords) => number;
 
@@ -46,6 +44,8 @@ type MapState = {
     path: Coords[];
     findingCoordsInfo: SearchInfoTable;
     greed: number;
+    isSearhing: boolean;
+    isPavingWay: boolean;
 }
 
 export const manhattanDistance: HeuristicFunction = (current: Coords, end: Coords) => {
@@ -91,6 +91,8 @@ const initialState: MapState = {
     path: InitialPath,
     findingCoordsInfo: {},
     greed: initialGreed,
+    isSearhing: true,
+    isPavingWay: false,
 };
 
 const mapSlice = createSlice({
@@ -115,20 +117,48 @@ const mapSlice = createSlice({
         endChanged(state, action: PayloadAction<Coords>) {
             state.end = action.payload;
         },
-    },
-    extraReducers: (builder) => {
-        builder.addCase(searchStarted, (state, action) => {
+        oneStepSearch(state) {
+            const visitedCoords = state.visited.shift();
+            if (visitedCoords) {
+                state.findingCoordsInfo[stringifyCoords(visitedCoords)] = {
+                    isViewed: true,
+                    isPath: false,
+                }
+            } else {
+                state.isSearhing = false;
+                state.isPavingWay = true;
+
+                const pathCoords = state.path.shift();
+
+                if (pathCoords) {
+                    state.findingCoordsInfo[stringifyCoords(pathCoords)] = {
+                        isViewed: true,
+                        isPath: true,
+                    }
+                } else {
+                    state.isPavingWay = false;
+                }
+            }
+        },
+        searchStarted(state) {
+            state.isSearhing = true;
+            state.isPavingWay = false;
+            state.findingCoordsInfo = {};
             const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
             [state.visited, state.path] = getSeeker(getHeuristic, getWeight)(state.map, state.start, state.end);
-        })
+        }
+    },
+    extraReducers: (builder) => {
         builder.addMatcher(isAnyOf(toolApplied, toolChanged, greedChanged,
             startChanged, endChanged), (state) => {
                 state.findingCoordsInfo = {};
+                state.isSearhing = false;
+                state.isPavingWay = false;
             })
     }
 })
 
 export const { toolApplied, toolChanged, greedChanged,
-    startChanged, endChanged } = mapSlice.actions;
+    startChanged, endChanged, oneStepSearch } = mapSlice.actions;
 
 export default mapSlice.reducer;
