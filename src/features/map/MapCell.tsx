@@ -1,11 +1,11 @@
 import { useAppSelector } from "../../app/hooks";
 import { CellColorGetter, CellType, getCellColor, getRoughness } from "../../common/cell";
-import { areEqualCoords, Coords, createCoords } from "../../common/coords";
+import { areEqualCoords, Coords, createCoords, stringifyCoords } from "../../common/coords";
 import { getCell } from "../../common/map";
 import endImage from '../../images/treasure-chest.png'
 import startImage from '../../images/person.png'
 import styled, { css } from "styled-components";
-import { createColor, createGradient, createGradientPoint, stringifyColor } from "../../common/rgb";
+import { createColor, createGradient, createGradientPoint, getColorBetween, stringifyColor } from "../../common/rgb";
 
 type CellCoords = {
     row: number;
@@ -63,12 +63,19 @@ const primaryVisited = createColor(199, 199, 197);
 
 const MapCell = (props: CellCoords) => {
     const coords = createCoords(props.row, props.column);
+    const stringifiedCoords = stringifyCoords(coords);
     const cell = useAppSelector(state => getCell(state.map.map, coords));
     const roughness = useAppSelector(state => getRoughness(getCell(state.map.map, coords)));
     const type = useAppSelector(state => getCell(state.map.map, coords).type)
-    const terrainColor = getCellColor(cell, getTypedColor);
     const start = useAppSelector(state => state.map.start);
     const end = useAppSelector(state => state.map.end);
+    const searchInfo = useAppSelector(state => state.map.findingCoordsInfo[stringifyCoords(coords)]);
+    let terrainColor = getCellColor(cell, getTypedColor);
+
+    if (searchInfo) {
+        terrainColor = searchInfo.isViewed ? getColorBetween(primaryVisited, terrainColor, 0.5) : terrainColor;
+        terrainColor = searchInfo.isPath ? getColorBetween(primaryPath, terrainColor, 0.5) : terrainColor;
+    }
 
     const handleCellChanged = () => {
         console.log('changed');
