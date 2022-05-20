@@ -49,7 +49,7 @@ const waterColor = createGradient(
 )
 
 const bushColor = createGradient(
-    createGradientPoint(createColor(205, 237, 247), 1)
+    createGradientPoint(createColor(187, 232, 183), 1)
 )
 
 const getTypedColor: CellColorGetter = (type: CellType) => {
