@@ -10,9 +10,9 @@ type MappedCoords = {
 }
 
 const getSeeker: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => {
-    const checked: Coords[] = [];
-    const path: Coords[] = [];
     return function (map: MapData, start: Coords, end: Coords): SearchResult {
+        const checked: Coords[] = [];
+        let path: Coords[] = [];
         const { markAsTaken, isAlreadyTaken } = matrixFinder(map);
         const { addToQueue, isInQueue, isQueueEmpty, extractHighestPriority, updatePriority } = prioritized<Tree>(areEqualTree);
         const canExpandTo = (coords: Coords) => isInMap(coords, map) && !isAlreadyTaken(coords);
@@ -27,7 +27,7 @@ const getSeeker: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeigh
 
             if (areEqualCoords(current?.coords, end)) {
                 checked.push(current?.coords);
-                path.push(current.coords);
+                path = Array.from(getPathToRoot(current));
                 return [
                     checked,
                     path,
