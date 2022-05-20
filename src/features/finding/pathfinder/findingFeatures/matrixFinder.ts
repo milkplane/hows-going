@@ -1,7 +1,6 @@
-import { Coords, CoordsShift, createShiftedCoords, stringifyCoords } from "../../../../common/coords";
-import { MapData } from "../../../../common/map";
+import { Coords, stringifyCoords } from "../../../../common/coords";
 
-const matrixFinder = (map: MapData) => {
+const matrixFinder = () => {
     const takenCoords: { [key: string]: boolean } = {};
 
     const isAlreadyTaken = (coords: Coords) => {

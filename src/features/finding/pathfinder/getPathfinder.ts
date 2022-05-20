@@ -10,11 +10,11 @@ type MappedCoords = {
 }
 
 const getPathfinder: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => {
+    const { markAsTaken, isAlreadyTaken } = matrixFinder();
+    const { addToQueue, isInQueue, isQueueEmpty, extractHighestPriority, updatePriority } = prioritized<Tree>(areEqualTree);
     return function (map: MapData, start: Coords, end: Coords): SearchResult {
         const checked: Coords[] = [];
         let path: Coords[] = [];
-        const { markAsTaken, isAlreadyTaken } = matrixFinder(map);
-        const { addToQueue, isInQueue, isQueueEmpty, extractHighestPriority, updatePriority } = prioritized<Tree>(areEqualTree);
         const canExpandTo = (coords: Coords) => isInMap(coords, map) && !isAlreadyTaken(coords);
         const pathLengths: MappedCoords = {};
 
@@ -37,7 +37,7 @@ const getPathfinder: SearchConfigurator = (getHeuristic: HeuristicFunction, getW
             markAsTaken(current?.coords);
 
             for (let descendant of expandTree(current, 1, canExpandTo).descendants) {
-                const pathLength = pathLengths[stringifyCoords(current.coords)] + getWeight(map, descendant.coords) + 1;
+                const pathLength = pathLengths[stringifyCoords(current.coords)] + getWeight(map, descendant.coords);
 
                 if (isInQueue(descendant) && pathLength >= pathLengths[stringifyCoords(descendant.coords)]) continue;
 
