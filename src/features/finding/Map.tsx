@@ -4,14 +4,14 @@ import { useAppSelector } from "../../app/hooks";
 import { areEqualCoords, Coords, createCoords } from "../../common/coords";
 import { useGameObjectDrag, useSearch, useTool } from "./hooks";
 import MapRow from "./MapRow";
-import { endChanged, startChanged } from "./mapSlice";
+import { endChanged, startChanged } from "./findingSlice";
 
 const Map = (props: any) => {
-    const height = useAppSelector(state => state.map.size.height);
+    const height = useAppSelector(state => state.size.height);
     const [hoveredCell, setHoveredCell] = useState<Coords>(createCoords(3, 3));
     const handleToolPressed = useTool(hoveredCell);
-    const start = useAppSelector(state => state.map.start);
-    const end = useAppSelector(state => state.map.end);
+    const start = useAppSelector(state => state.start);
+    const end = useAppSelector(state => state.end);
     const handleStartPressed = useGameObjectDrag(start, hoveredCell, startChanged);
     const handleEngChanging = useGameObjectDrag(end, hoveredCell, endChanged);
     useSearch(60);

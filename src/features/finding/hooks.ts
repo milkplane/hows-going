@@ -4,7 +4,7 @@ import { MouseEvent } from "react";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { areEqualCoords, Coords } from "../../common/coords";
-import { oneStepSearch, toolApplied } from "./mapSlice";
+import { oneStepSearch, toolApplied } from "./findingSlice";
 
 export const useTool = (coords: Coords) => {
     const dispatch = useAppDispatch();
@@ -62,8 +62,8 @@ export const useGameObjectDrag = (objectPosition: Coords, hoveredCell: Coords, o
 
 
 export const useSearch = (rate: number) => {
-    const isSearhing = useAppSelector(state => state.map.isSearhing);
-    const isPavingWay = useAppSelector(state => state.map.isPavingWay)
+    const isSearhing = useAppSelector(state => state.isSearhing);
+    const isPavingWay = useAppSelector(state => state.isPavingWay)
     const dispatch = useAppDispatch();
 
     useEffect(() => {

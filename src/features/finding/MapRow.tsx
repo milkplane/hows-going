@@ -8,7 +8,7 @@ type MapRowInfo = {
 }
 
 const MapRow = (props: MapRowInfo) => {
-    const width = useAppSelector(state => state.map.size.width);
+    const width = useAppSelector(state => state.size.width);
 
     const cells = [];
 

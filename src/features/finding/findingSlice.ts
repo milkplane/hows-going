@@ -4,10 +4,10 @@ import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import createTool, { Tool } from "../../common/createTool";
 import { createAppliedToolMap, createMap, getCell, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
-import flat from "./creators/flat";
-import getSeeker from "./finding/getSeeker";
+import flat from "./mapCreators/flat";
+import getSeeker from "./pathfinder/getPathfinder";
 
-// do not split mapSlice into findingSlice/mapSlice/findingFlowSlice
+// do not split findingSlice into findingSlice/mapSlice/findingFlowSlice
 // finding generator or a function of the form (map, start, end) => [ checkedCoords: Coords[], path: Coords[] ]
 // needs to know the map (after creating map, tool applying, size changing, basically every available action)
 // but slice only have access to the section of state that they own
@@ -16,9 +16,9 @@ export type HeuristicFunction = (current: Coords, end: Coords) => number;
 
 export type WeightGetter = (map: MapData, coords: Coords) => number;
 
-export type SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => Seeker;
+export type SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => Pathfinder;
 
-export type Seeker = (map: MapData, start: Coords, end: Coords) => SearchResult;
+export type Pathfinder = (map: MapData, start: Coords, end: Coords) => SearchResult;
 
 export type SearchResult = [
     checked: Coords[],
@@ -34,7 +34,7 @@ type SearchCoordsInfo = {
     isViewed: boolean;
 }
 
-type MapState = {
+type FindingState = {
     map: MapData;
     size: Size;
     tool: Tool;
@@ -81,7 +81,7 @@ const [initialGetHeuristic, initialGetWeight] = shiftedApproximationFunctions(ma
 const inititalSeeker = getSeeker(initialGetHeuristic, initialGetWeight);
 const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, initialEnd);
 
-const initialState: MapState = {
+const initialState: FindingState = {
     size: initialSize,
     map: initialMap,
     tool: createTool(3, 0.2, 0.01, CellType.Ground),

@@ -1,10 +1,8 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import map from '../features/map/mapSlice';
+import finding from '../features/finding/findingSlice';
 
 export const store = configureStore({
-  reducer: {
-    map
-  },
+  reducer: finding
 });
 
 export type AppDispatch = typeof store.dispatch;

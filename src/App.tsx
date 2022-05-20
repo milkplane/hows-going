@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Map from './features/map/Map';
+import Map from './features/finding/Map';
 
 function App() {
   return (

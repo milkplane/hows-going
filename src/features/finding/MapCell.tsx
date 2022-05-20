@@ -64,12 +64,12 @@ const primaryVisited = createColor(199, 199, 197);
 const MapCell = (props: CellCoords) => {
     const coords = createCoords(props.row, props.column);
     const stringifiedCoords = stringifyCoords(coords);
-    const cell = useAppSelector(state => getCell(state.map.map, coords));
-    const roughness = useAppSelector(state => getRoughness(getCell(state.map.map, coords)));
-    const type = useAppSelector(state => getCell(state.map.map, coords).type)
-    const start = useAppSelector(state => state.map.start);
-    const end = useAppSelector(state => state.map.end);
-    const searchInfo = useAppSelector(state => state.map.findingCoordsInfo[stringifyCoords(coords)]);
+    const cell = useAppSelector(state => getCell(state.map, coords));
+    const roughness = useAppSelector(state => getRoughness(getCell(state.map, coords)));
+    const type = useAppSelector(state => getCell(state.map, coords).type)
+    const start = useAppSelector(state => state.start);
+    const end = useAppSelector(state => state.end);
+    const searchInfo = useAppSelector(state => state.findingCoordsInfo[stringifyCoords(coords)]);
     let terrainColor = getCellColor(cell, getTypedColor);
 
     if (searchInfo) {

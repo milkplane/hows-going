@@ -1,7 +1,7 @@
 import { areEqualCoords, Coords, stringifyCoords } from "../../../common/coords";
 import { isInMap, MapData } from "../../../common/map";
 import { areEqualTree, createTree, expandTree, getPathToRoot, Tree } from "../../../common/tree";
-import { HeuristicFunction, SearchConfigurator, SearchResult, WeightGetter } from "../mapSlice";
+import { HeuristicFunction, SearchConfigurator, SearchResult, WeightGetter } from "../findingSlice";
 import matrixFinder from "./findingFeatures/matrixFinder";
 import prioritized from "./findingFeatures/prioritized";
 
@@ -9,7 +9,7 @@ type MappedCoords = {
     [key: string]: number;
 }
 
-const getSeeker: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => {
+const getPathfinder: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => {
     return function (map: MapData, start: Coords, end: Coords): SearchResult {
         const checked: Coords[] = [];
         let path: Coords[] = [];
@@ -62,4 +62,4 @@ const getSeeker: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeigh
     }
 }
 
-export default getSeeker;
+export default getPathfinder;
