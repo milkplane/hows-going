@@ -27,7 +27,7 @@ const MAX_HEIGHT = 1;
 
 const getAcceptableHeight = (height: number): number => {
     if (height > MAX_HEIGHT) return MAX_HEIGHT;
-    if (height < MIN_HEIGHT) return MAX_HEIGHT;
+    if (height < MIN_HEIGHT) return MIN_HEIGHT;
 
     return height;
 }
