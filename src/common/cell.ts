@@ -121,3 +121,5 @@ export const getCellColor = (cell: Cell, getGradient: CellColorGetter) => {
     const shift = getShiftInHeight(cell);
     return getGradientColor(color, shift);    
 }
+
+export const getCellType = (cell: Cell) => cell.type;

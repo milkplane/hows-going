@@ -1,7 +1,7 @@
 import { areEqualCoords, Coords, stringifyCoords } from "../../../common/coords";
 import { isInMap, MapData } from "../../../common/map";
 import { areEqualTree, createTree, expandTree, getPathToRoot, Tree } from "../../../common/tree";
-import { HeuristicFunction, SearchConfigurator, SearchResult, WeightGetter } from "../findingSlice";
+import { CanBePassed, HeuristicFunction, SearchConfigurator, SearchResult, WeightGetter } from "../findingSlice";
 import matrixFinder from "./findingFeatures/matrixFinder";
 import prioritized from "./findingFeatures/prioritized";
 
@@ -12,12 +12,13 @@ type MappedCoords = {
 const getPathfinder: SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => {
     const { markAsTaken, isAlreadyTaken } = matrixFinder();
     const { addToQueue, isInQueue, isQueueEmpty, extractHighestPriority, updatePriority } = prioritized<Tree>(areEqualTree);
-    return function (map: MapData, start: Coords, end: Coords): SearchResult {
+    return function (map: MapData, start: Coords, end: Coords, canBePassed: CanBePassed): SearchResult {
         const checked: Coords[] = [];
         let path: Coords[] = [];
-        const canExpandTo = (coords: Coords) => isInMap(coords, map) && !isAlreadyTaken(coords);
+        const canExpandTo = (coords: Coords) => isInMap(coords, map) &&
+            !isAlreadyTaken(coords) &&
+            canBePassed(map, coords);
         const pathLengths: MappedCoords = {};
-
         const root = createTree(start);
         pathLengths[stringifyCoords(root.coords)] = 0;
         addToQueue(root, 0);

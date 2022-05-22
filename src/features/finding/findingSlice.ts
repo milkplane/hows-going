@@ -1,5 +1,5 @@
 import { createSlice, current, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
-import { CellType, getRoughness } from "../../common/cell";
+import { CellType, getCellType, getRoughness } from "../../common/cell";
 import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import createTool, { Tool } from "../../common/createTool";
 import { createAppliedToolMap, createMap, getCell, MapData } from "../../common/map";
@@ -18,7 +18,9 @@ export type WeightGetter = (map: MapData, coords: Coords) => number;
 
 export type SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => Pathfinder;
 
-export type Pathfinder = (map: MapData, start: Coords, end: Coords) => SearchResult;
+export type CanBePassed = (map: MapData, coords: Coords) => boolean;
+
+export type Pathfinder = (map: MapData, start: Coords, end: Coords, canExpandTo: CanBePassed) => SearchResult;
 
 export type SearchResult = [
     checked: Coords[],
@@ -71,6 +73,12 @@ const shiftedApproximationFunctions = (getHeuristic: HeuristicFunction, getWeigh
     ]
 }
 
+const canBePassed = (map: MapData, coords: Coords) => {
+    const type = getCellType(getCell(map, coords));
+
+    return type !== CellType.Bush;
+}
+
 
 const initialSize = createSize(10, 10);
 const initialMap = createMap(flat, initialSize);
@@ -79,7 +87,7 @@ const initialEnd = createCoords(0, 2);
 const initialGreed = 0.5; // 0 = Dijkstra's; 0.5 = A*; 1 = GBFS
 const [initialGetHeuristic, initialGetWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, 0.5);
 const inititalSeeker = getSeeker(initialGetHeuristic, initialGetWeight);
-const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, initialEnd);
+const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, initialEnd, canBePassed);
 
 const initialState: FindingState = {
     size: initialSize,
@@ -145,7 +153,7 @@ const mapSlice = createSlice({
             state.isPavingWay = false;
             state.findingCoordsInfo = {};
             const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
-            [state.visited, state.path] = getSeeker(getHeuristic, getWeight)(state.map, state.start, state.end);
+            [state.visited, state.path] = getSeeker(getHeuristic, getWeight)(state.map, state.start, state.end, canBePassed);
         }
     },
     extraReducers: (builder) => {
