@@ -7,7 +7,7 @@ import MapRow from "./MapRow";
 import { endChanged, startChanged } from "./findingSlice";
 
 const Map = (props: any) => {
-    const height = useAppSelector(state => state.size.height);
+    const height = useAppSelector(state => state.map.length);
     const [hoveredCell, setHoveredCell] = useState<Coords>(createCoords(3, 3));
     const handleToolPressed = useTool(hoveredCell);
     const start = useAppSelector(state => state.start);

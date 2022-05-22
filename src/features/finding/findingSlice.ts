@@ -2,7 +2,7 @@ import { createSlice, current, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { CellType, getCellType, getRoughness } from "../../common/cell";
 import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import createTool, { Tool } from "../../common/createTool";
-import { createAppliedToolMap, createMap, getCell, MapData } from "../../common/map";
+import { createAppliedToolMap, createMap, getCell, MapCreator, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
 import flat from "./mapCreators/flat";
 import getSeeker from "./pathfinder/getPathfinder";
@@ -38,7 +38,6 @@ type SearchCoordsInfo = {
 
 type FindingState = {
     map: MapData;
-    size: Size;
     tool: Tool;
     start: Coords;
     end: Coords;
@@ -90,7 +89,6 @@ const inititalSeeker = getSeeker(initialGetHeuristic, initialGetWeight);
 const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, initialEnd, canBePassed);
 
 const initialState: FindingState = {
-    size: initialSize,
     map: initialMap,
     tool: createTool(3, 0.2, 0.01, CellType.Ground),
     start: initialStart,
