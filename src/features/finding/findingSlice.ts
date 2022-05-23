@@ -79,7 +79,7 @@ const canBePassed = (map: MapData, coords: Coords) => {
 }
 
 
-const initialSize = createSize(10, 10);
+const initialSize = createSize(30, 30);
 const initialMap = createMap(flat, initialSize);
 const initialStart = createCoords(0, 0);
 const initialEnd = createCoords(0, 2);

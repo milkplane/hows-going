@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { useAppDispatch } from "../../app/hooks"
 import { searchStarted } from "./findingSlice";
 
@@ -8,9 +9,9 @@ const SearchButton = () => {
         dispatch(searchStarted());
     }
 
-    return <button onClick={onClick}>
+    return <Button size="large" onClick={onClick}>
         найти путь
-    </button>
+    </Button>
 }
 
 export default SearchButton

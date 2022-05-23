@@ -1,3 +1,4 @@
+import { Row } from "antd";
 import { useAppSelector } from "../../app/hooks";
 
 const isShortest = (greed: number) => {
@@ -17,9 +18,11 @@ const getSimilarName = (greed: number) => {
 const PathfinderInfo = () => {
     const greed = useAppSelector(state => state.greed);
 
-    return <div>
-        <p>Алгоритм похож на {getSimilarName(greed)} и {isShortest(greed) || 'не'} гарантирует найти кратчайший путь</p>
-    </div>
+    return <Row align="middle" style={{ minHeight: '127px', maxWidth: 350, padding: 20, backgroundColor: '#FFFDEA' }}>
+        <p style={{ margin: 0 }}>
+            Алгоритм похож на <strong>{getSimilarName(greed)}</strong> и <strong>{isShortest(greed) || 'не'} гарантирует</strong> найти кратчайший путь
+        </p>
+    </Row>
 }
 
 export default PathfinderInfo;

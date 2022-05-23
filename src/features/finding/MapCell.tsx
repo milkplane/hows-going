@@ -15,14 +15,13 @@ type CellCoords = {
 
 const Tile = styled.td`
     background-color: ${props => props.color};
-    min-width: 50px;
-    height: 50px;
-    display: inline-flex;
+    width: 3.333333%;
+    height: 30px;
 `
 
 const gameObject = css`
-    background-size: cover;
-    flex: 1;
+    background-size: 100% 100%;
+    height: 100%;
     margin: 10%;
 `
 
@@ -34,6 +33,7 @@ const StartImage = styled.div`
 const EndImage = styled.div`
     ${gameObject}
     background-image: url(${endImage});
+
 `
 
 const groundColor = createGradient(

@@ -32,7 +32,7 @@ const Map = (props: any) => {
         rows.push(<MapRow key={i} row={i} onCellChanged={setHoveredCell} />)
     }
 
-    return <table>
+    return <table style={{width: '100%', height: '100vh'}}>
         <tbody onMouseDown={onMapPressed}>
             {rows}
         </tbody>
