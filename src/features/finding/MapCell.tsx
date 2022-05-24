@@ -16,7 +16,6 @@ type CellProps = {
 }
 
 const Tile = styled.td`
-    background-color: ${props => props.color};
     width: 3.333333%;
     height: 30px;
 `
@@ -46,7 +45,7 @@ const groundColor = createGradient(
 )
 
 const waterColor = createGradient(
-    createGradientPoint(createColor(155, 118, 83), 0),
+    createGradientPoint(createColor(140, 222, 255), 0),
     createGradientPoint(createColor(205, 237, 247), 1)
 )
 
@@ -79,7 +78,7 @@ const MapCell = React.memo((props: CellProps) => {
         props.onCellChanged(createCoords(props.row, props.column));
     }
 
-    return <Tile color={stringifyColor(terrainColor)} onMouseEnter={handleCellChanged}>
+    return <Tile onMouseEnter={handleCellChanged} style={{backgroundColor: stringifyColor(terrainColor)}}>
         {isStart ? <StartImage /> : null}
         {isEnd ? <EndImage /> : null}
     </Tile>
