@@ -41,7 +41,7 @@ const EndImage = styled.div`
 const groundColor = createGradient(
     createGradientPoint(createColor(155, 118, 83), 0),
     createGradientPoint(createColor(255, 253, 234), 0.5),
-    createGradientPoint(createColor(126, 113, 107), 0.75),
+    createGradientPoint(createColor(192, 184, 172), 0.75),
     createGradientPoint(createColor(246, 245, 243), 1)
 )
 
