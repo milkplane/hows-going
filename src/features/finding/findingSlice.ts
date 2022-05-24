@@ -156,7 +156,7 @@ const mapSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addMatcher(isAnyOf(toolApplied, toolChanged, greedChanged,
-            startChanged, endChanged), (state) => {
+            startChanged, endChanged, mapChanged), (state) => {
                 state.findingCoordsInfo = {};
                 state.isSearhing = false;
                 state.isPavingWay = false;
