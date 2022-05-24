@@ -23,7 +23,7 @@ export const useTool = (coords: Coords) => {
 
         const timer = setInterval(() => {
             dispatch(toolApplied(coords));
-        }, 1000 / 2);
+        }, 1000 / 100);
 
         return () => {
             clearInterval(timer);

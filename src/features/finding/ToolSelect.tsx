@@ -23,12 +23,12 @@ const toolsInfo = [
     {
         id: 3,
         img: increase,
-        tool: createTool(2, 0.02, 0.01, null),
+        tool: createTool(3, 0, 0.02, null),
     },
     {
         id: 4,
         img: decrease,
-        tool: createTool(2, -0.02, -0.01, null),
+        tool: createTool(3, 0, -0.02, null),
     },
 ]
 

@@ -44,10 +44,10 @@ export const isInMap = (coords: Coords, map: MapData): boolean => {
 const getChangesFromTool = (map: MapData, tool: Tool, coords: Coords): MapChanges => {
     const canExpandTo = (coords: Coords) => isInMap(coords, map);
     const areaRoot = expandTree(createTree(coords), tool.size, canExpandTo);
-    const getPressure = (distanceFromCenter: number) => distanceFromCenter * tool.increaseRate;
+    const getPressure = (distanceFromCenter: number) => (tool.size + 1 - distanceFromCenter) * tool.increaseRate;
     const pressureInfos = arrayFromTree<number>(areaRoot, getPressure);
     return pressureInfos.map((info) => {
-        const tooledHeight = tool.instantHeightIncrease + info.mappedValue;
+        const tooledHeight = info.mappedValue;
         const cell = increaseCellHeight(map[info.coords.i][info.coords.j], tooledHeight);
 
         if (tool.brushType) {
