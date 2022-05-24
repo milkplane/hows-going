@@ -19,11 +19,11 @@ export const copyCell = (cell: Cell): Cell => {
     };
 }
 
-const MAX_WATER_HEIGHT = 0 - Number.EPSILON;
-const MIN_BUSH_HEIGHT = -0.1 - Number.EPSILON;
-const MAX_BUSH_HEIGHT = 0.3 - Number.EPSILON;
-const MIN_HEIGHT = -1;
-const MAX_HEIGHT = 1;
+export const MAX_WATER_HEIGHT = 0 - Number.EPSILON;
+export const MIN_BUSH_HEIGHT = -0.1 - Number.EPSILON;
+export const MAX_BUSH_HEIGHT = 0.3 - Number.EPSILON;
+export const MIN_HEIGHT = -1;
+export const MAX_HEIGHT = 1;
 
 const getAcceptableHeight = (height: number): number => {
     if (height > MAX_HEIGHT) return MAX_HEIGHT;
