@@ -7,8 +7,11 @@ import { greedChanged, mapChanged } from "./findingSlice";
 import PathfinderInfo from "./PathfinderInfo";
 import SearchButton from "./SearchButton";
 import ToolSelect from "./ToolSelect";
-import { Col, InputNumber, Row, Slider, Space } from 'antd';
+import { Button, Col, Row, Slider, Space } from 'antd';
 import { useState } from "react";
+import { ReloadOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
+import { useCallback } from "react";
 
 const OptionsPanel = () => {
     const dispatch = useAppDispatch();
@@ -16,6 +19,14 @@ const OptionsPanel = () => {
     const width = useAppSelector(state => state.map[0].length);
     const sliderShift = useAppSelector(state => state.greed);
     const [mapCreatorInfo, setMapCreatorInfo] = useState(mapCreatorInfos[0]);
+
+    const onRefresh = useCallback(() => {
+        dispatch(mapChanged(createMap(mapCreatorInfo.value, createSize(height, width))));
+    }, [mapCreatorInfo.value, height, width])
+
+    useEffect(() => {
+        onRefresh();
+    }, [mapCreatorInfo , onRefresh]);
 
     const onMapCreatorSelect = (mapCreatorInfo: Selectable) => {
         setMapCreatorInfo(mapCreatorInfo);
@@ -34,6 +45,9 @@ const OptionsPanel = () => {
                 </Row>
                 <Row justify="center">
                     <ObjectSelect objects={mapCreatorInfos} onSelect={onMapCreatorSelect} value={mapCreatorInfo} />
+                    <Button onClick={onRefresh}>
+                        <ReloadOutlined style={{ fontSize: '16px', color: '#383838' }} />
+                    </Button>
                 </Row>
                 <Row justify="center">
                     <Space direction="vertical">
