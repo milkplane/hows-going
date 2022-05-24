@@ -4,8 +4,6 @@ import { MapCreator } from '../../../common/map';
 import { Size } from '../../../common/size';
 import flat from './flat';
 
-const simplex = new SimplexNoise();
-
 const createMoisturedCell = (height: number) => {
     if (height <= MAX_WATER_HEIGHT) {
         return createCell(height, CellType.Water)
@@ -24,7 +22,7 @@ const createPlantedCell = (unsownCell: Cell) => {
 }
 
 const random: MapCreator = (size: Size) => {
-
+    const simplex = new SimplexNoise();
     const flatMatrix = flat(size);
     const zoom = 7;
 
