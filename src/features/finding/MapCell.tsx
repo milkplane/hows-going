@@ -1,15 +1,17 @@
+import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import { CellColorGetter, CellType, getCellColor, getRoughness } from "../../common/cell";
+import { CellColorGetter, CellType, createCell, getCellColor, getRoughness } from "../../common/cell";
 import { areEqualCoords, Coords, createCoords, stringifyCoords } from "../../common/coords";
-import { getCell } from "../../common/map";
 import endImage from '../../images/treasure-chest.png'
 import startImage from '../../images/person.png'
 import styled, { css } from "styled-components";
 import { createColor, createGradient, createGradientPoint, getColorBetween, stringifyColor } from "../../common/rgb";
 
-type CellCoords = {
+type CellProps = {
     row: number;
     column: number;
+    height: number;
+    type: CellType;
     onCellChanged: (coords: Coords) => any;
 }
 
@@ -61,13 +63,12 @@ const getTypedColor: CellColorGetter = (type: CellType) => {
 const primaryPath = createColor(209, 164, 105);
 const primaryVisited = createColor(199, 199, 197);
 
-const MapCell = (props: CellCoords) => {
+const MapCell = React.memo((props: CellProps) => {
     const coords = createCoords(props.row, props.column);
-    const cell = useAppSelector(state => getCell(state.map, coords));
     const isStart = useAppSelector(state => areEqualCoords(coords, state.start));
     const isEnd = useAppSelector(state => areEqualCoords(coords, state.end));
     const searchInfo = useAppSelector(state => state.findingCoordsInfo[stringifyCoords(coords)]);
-    let terrainColor = getCellColor(cell, getTypedColor);
+    let terrainColor = getCellColor(createCell(props.height, props.type), getTypedColor);
 
     if (searchInfo) {
         terrainColor = searchInfo.isViewed ? getColorBetween(primaryVisited, terrainColor, 0.5) : terrainColor;
@@ -82,6 +83,6 @@ const MapCell = (props: CellCoords) => {
         {isStart ? <StartImage /> : null}
         {isEnd ? <EndImage /> : null}
     </Tile>
-}
+})
 
 export default MapCell;

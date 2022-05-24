@@ -15,9 +15,11 @@ const MapRow = React.memo((props: MapRowInfo) => {
 
     for (let i = 0; i < rowData.length; i++) {
         cells.push(<MapCell key={i}
+            height={rowData[i].height}
+            type={rowData[i].type}
             row={props.row}
             column={i}
-            onCellChanged={props.onCellChanged}/>)
+            onCellChanged={props.onCellChanged} />)
     }
 
     return <tr>
