@@ -1,22 +1,25 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { mapCreators } from "../../common/consts";
+import { mapCreatorInfos } from "../../common/consts";
 import { createMap } from "../../common/map";
-import ObjectSelect from "../../common/ObjectSelect";
+import ObjectSelect, { Selectable } from "../../common/ObjectSelect";
 import { createSize } from "../../common/size";
 import { greedChanged, mapChanged } from "./findingSlice";
 import PathfinderInfo from "./PathfinderInfo";
 import SearchButton from "./SearchButton";
 import ToolSelect from "./ToolSelect";
 import { Col, InputNumber, Row, Slider, Space } from 'antd';
+import { useState } from "react";
 
 const OptionsPanel = () => {
     const dispatch = useAppDispatch();
     const height = useAppSelector(state => state.map.length);
     const width = useAppSelector(state => state.map[0].length);
     const sliderShift = useAppSelector(state => state.greed);
+    const [mapCreatorInfo, setMapCreatorInfo] = useState(mapCreatorInfos[0]);
 
-    const onMapCreatorSelect = (mapCreator: any) => {
-        dispatch(mapChanged(createMap(mapCreator, createSize(height, width))));
+    const onMapCreatorSelect = (mapCreatorInfo: Selectable) => {
+        setMapCreatorInfo(mapCreatorInfo);
+        dispatch(mapChanged(createMap(mapCreatorInfo.value, createSize(height, width))));
     }
 
     const onSlide = (value: number) => {
@@ -30,7 +33,7 @@ const OptionsPanel = () => {
                     <h1>How's going</h1>
                 </Row>
                 <Row justify="center">
-                    <ObjectSelect objects={mapCreators} onSelect={onMapCreatorSelect} value={mapCreators[0]} />
+                    <ObjectSelect objects={mapCreatorInfos} onSelect={onMapCreatorSelect} value={mapCreatorInfo} />
                 </Row>
                 <Row justify="center">
                     <Space direction="vertical">
