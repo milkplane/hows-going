@@ -54,7 +54,7 @@ export const manhattanDistance: HeuristicFunction = (current: Coords, end: Coord
 }
 
 export const aquaphobicWeight: WeightGetter = (map: MapData, coords: Coords) => {
-    return Math.pow(getRoughness(getCell(map, coords), 50), 5);
+    return Math.pow(getRoughness(getCell(map, coords), 3), 5);
 }
 
 const shiftedHeuristicGetter = (getHeuristic: HeuristicFunction, shift: number): HeuristicFunction => {
