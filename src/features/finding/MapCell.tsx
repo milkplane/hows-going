@@ -1,17 +1,15 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import { CellColorGetter, CellType, createCell, getCellColor, getRoughness } from "../../common/cell";
-import { areEqualCoords, Coords, createCoords, stringifyCoords } from "../../common/coords";
+import { areEqualCells, Cell, CellColorGetter, CellType, getCellColor } from "../../common/cell";
+import { areEqualCoords, Coords, stringifyCoords } from "../../common/coords";
 import endImage from '../../images/treasure-chest.png'
 import startImage from '../../images/person.png'
 import styled, { css } from "styled-components";
 import { createColor, createGradient, createGradientPoint, getColorBetween, stringifyColor } from "../../common/rgb";
 
 type CellProps = {
-    row: number;
-    column: number;
-    height: number;
-    type: CellType;
+    coords: Coords;
+    cell: Cell;
     onCellChanged: (coords: Coords) => any;
 }
 
@@ -63,11 +61,10 @@ const primaryPath = createColor(209, 164, 105);
 const primaryVisited = createColor(199, 199, 197);
 
 const MapCell = React.memo((props: CellProps) => {
-    const coords = createCoords(props.row, props.column);
-    const isStart = useAppSelector(state => areEqualCoords(coords, state.start));
-    const isEnd = useAppSelector(state => areEqualCoords(coords, state.end));
-    const searchInfo = useAppSelector(state => state.findingCoordsInfo[stringifyCoords(coords)]);
-    let terrainColor = getCellColor(createCell(props.height, props.type), getTypedColor);
+    const isStart = useAppSelector(state => areEqualCoords(props.coords, state.start));
+    const isEnd = useAppSelector(state => areEqualCoords(props.coords, state.end));
+    const searchInfo = useAppSelector(state => state.findingCoordsInfo[stringifyCoords(props.coords)]);
+    let terrainColor = getCellColor(props.cell, getTypedColor);
 
     if (searchInfo) {
         terrainColor = searchInfo.isViewed ? getColorBetween(primaryVisited, terrainColor, 0.5) : terrainColor;
@@ -75,13 +72,16 @@ const MapCell = React.memo((props: CellProps) => {
     }
 
     const handleCellChanged = () => {
-        props.onCellChanged(createCoords(props.row, props.column));
+        props.onCellChanged(props.coords);
     }
 
-    return <Tile onMouseEnter={handleCellChanged} style={{backgroundColor: stringifyColor(terrainColor)}}>
+    return <Tile onMouseEnter={handleCellChanged} style={{ backgroundColor: stringifyColor(terrainColor) }}>
         {isStart ? <StartImage /> : null}
         {isEnd ? <EndImage /> : null}
     </Tile>
+}, (prevProps, nextProps) => {
+    return areEqualCells(prevProps.cell, nextProps.cell) &&
+        areEqualCoords(prevProps.coords, nextProps.coords);
 })
 
 export default MapCell;

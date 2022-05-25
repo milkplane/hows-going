@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import { areEqualCoords, Coords } from "../../common/coords";
+import { Coords, createCoords } from "../../common/coords";
 import MapCell from "./MapCell";
 
 type MapRowInfo = {
@@ -13,12 +13,10 @@ const MapRow = React.memo((props: MapRowInfo) => {
 
     const cells = [];
 
-    for (let i = 0; i < rowData.length; i++) {
-        cells.push(<MapCell key={i}
-            height={rowData[i].height}
-            type={rowData[i].type}
-            row={props.row}
-            column={i}
+    for (let column = 0; column < rowData.length; column++) {
+        cells.push(<MapCell key={column}
+            cell={rowData[column]}
+            coords={createCoords(props.row, column)}
             onCellChanged={props.onCellChanged} />)
     }
 
