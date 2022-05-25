@@ -18,17 +18,17 @@ const toolsInfo = [
     {
         id: 2,
         img: water,
-        tool: createTool(0, 0, 0, CellType.Water),
+        tool: createTool(2, 0, 0, CellType.Water),
     },
     {
         id: 3,
         img: increase,
-        tool: createTool(3, 0, 0.02, null),
+        tool: createTool(3, 0, 0.03, null),
     },
     {
         id: 4,
         img: decrease,
-        tool: createTool(3, 0, -0.02, null),
+        tool: createTool(3, 0, -0.03, null),
     },
 ]
 
