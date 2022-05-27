@@ -1,5 +1,6 @@
 import { createSlice, current, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { CellType, getCellType, getRoughness } from "../../common/cell";
+import { toolsInfo } from "../../common/consts";
 import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import createTool, { Tool } from "../../common/createTool";
 import { createAppliedToolMap, createMap, getCell, MapCreator, MapData } from "../../common/map";
@@ -90,7 +91,7 @@ const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, i
 
 const initialState: FindingState = {
     map: initialMap,
-    tool: createTool(3, 0.2, 0.01, CellType.Ground),
+    tool: toolsInfo[2].tool,
     start: initialStart,
     end: initialEnd,
     visited: initialVisited,
