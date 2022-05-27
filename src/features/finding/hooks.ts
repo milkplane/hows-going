@@ -1,10 +1,15 @@
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { MouseEvent } from "react";
+import { useRef } from "react";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { areEqualCoords, Coords } from "../../common/coords";
-import { oneStepSearch, toolApplied } from "./findingSlice";
+import { createMap } from "../../common/map";
+import { createSize } from "../../common/size";
+import { mapChanged, oneStepSearch, toolApplied } from "./findingSlice";
+import flat from "./mapCreators/flat";
 
 export const useTool = (coords: Coords) => {
     const dispatch = useAppDispatch();
@@ -77,7 +82,32 @@ export const useSearch = (rate: number) => {
         return () => {
             clearInterval(timer);
         }
-        
+
 
     }, [isSearhing, isPavingWay, rate])
+}
+
+
+export const useMapResize = <T extends HTMLElement>(dividingSquareSideLength: number) => {
+    const containerRef = useRef<T>(null);
+    const dispatch = useDispatch();
+
+    const resizeMap = () => {
+        if (!containerRef.current) return;
+
+        const newSize = createSize(
+            Math.floor(containerRef.current.clientHeight / dividingSquareSideLength),
+            Math.floor(containerRef.current.clientWidth / dividingSquareSideLength),
+        );
+        dispatch(mapChanged(createMap(flat, newSize)))
+    }
+
+    useEffect(() => {
+        resizeMap();
+        window.addEventListener("resize", () => {
+            resizeMap();
+        })
+    }, [containerRef.current])
+
+    return containerRef;
 }

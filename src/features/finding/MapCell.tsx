@@ -14,13 +14,16 @@ type CellProps = {
 }
 
 const Tile = styled.td`
-    width: 3.333333%;
-    height: 30px;
+    position: relative;
 `
 
 const gameObject = css`
-    background-size: 100% 100%;
-    height: 100%;
+    background-size: 100% 100%; 
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
     margin: 10%;
 `
 
