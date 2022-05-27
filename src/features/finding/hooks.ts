@@ -5,10 +5,10 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { areEqualCoords, Coords } from "../../common/coords";
+import { areEqualCoords, Coords, createCoords } from "../../common/coords";
 import { createMap } from "../../common/map";
 import { createSize } from "../../common/size";
-import { mapChanged, oneStepSearch, toolApplied } from "./findingSlice";
+import { endChanged, mapChanged, oneStepSearch, startChanged, toolApplied } from "./findingSlice";
 import flat from "./mapCreators/flat";
 
 export const useTool = (coords: Coords) => {
@@ -40,7 +40,7 @@ export const useTool = (coords: Coords) => {
 }
 
 
-export const useGameObjectDrag = (objectPosition: Coords, hoveredCell: Coords, objectChanged: ActionCreatorWithPayload<Coords, string>) => {
+export const useGameObjectDrag = (hoveredCell: Coords, objectChanged: ActionCreatorWithPayload<Coords, string>) => {
     const dipatch = useAppDispatch();
     const [isObjectChanging, setIsObjectChanging] = useState<boolean>(false);
 
@@ -110,4 +110,24 @@ export const useMapResize = <T extends HTMLElement>(dividingSquareSideLength: nu
     }, [containerRef.current])
 
     return containerRef;
+}
+
+
+export const useMapInteraction = (start: Coords, end: Coords) => {
+    const [hoveredCell, setHoveredCell] = useState<Coords>(createCoords(3, 3));
+    const handleToolPressed = useTool(hoveredCell);
+    const handleStartPressed = useGameObjectDrag(hoveredCell, startChanged);
+    const handleEngChanging = useGameObjectDrag(hoveredCell, endChanged);
+
+    const onMapPressed = (event: MouseEvent<HTMLTableSectionElement>) => {
+        if (areEqualCoords(hoveredCell, start)) {
+            handleStartPressed(event);
+        } else if (areEqualCoords(hoveredCell, end)) {
+            handleEngChanging(event);
+        } else {
+            handleToolPressed(event);
+        }
+    }
+
+    return {onMapPressed, setHoveredCell};
 }
