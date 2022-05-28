@@ -2,7 +2,7 @@ import { createSlice, current, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { CellType, getCellType, getRoughness } from "../../common/cell";
 import { toolsInfo } from "../../common/consts";
 import { Coords, createCoords, stringifyCoords } from "../../common/coords";
-import createTool, { Tool } from "../../common/createTool";
+import { Tool } from "../../common/createTool";
 import { createAppliedToolMap, createMap, getCell, MapCreator, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
 import flat from "./mapCreators/flat";
@@ -38,6 +38,7 @@ type SearchCoordsInfo = {
 }
 
 type FindingState = {
+    mapCreator: MapCreator;
     map: MapData;
     tool: Tool;
     start: Coords;
@@ -91,6 +92,7 @@ const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, i
 
 const initialState: FindingState = {
     map: initialMap,
+    mapCreator: flat,
     tool: toolsInfo[2].tool,
     start: initialStart,
     end: initialEnd,
@@ -109,8 +111,23 @@ const mapSlice = createSlice({
         toolApplied(state, action: PayloadAction<Coords>) {
             state.map = createAppliedToolMap(state.map, state.tool, action.payload);
         },
-        mapChanged(state, action: PayloadAction<MapData>) {
-            state.map = action.payload;
+        mapCreatorChanged(state, action: PayloadAction<MapCreator>) {
+            const size = createSize(
+                state.map.length,
+                state.map[0].length,
+            )
+            state.map = action.payload(size);
+            state.mapCreator = action.payload;
+        },
+        sizeChanged(state, action: PayloadAction<Size>) {
+            state.map = state.mapCreator(action.payload);
+        },
+        mapRefreshed(state) {
+            const size = createSize(
+                state.map.length,
+                state.map[0].length,
+            )
+            state.map = state.mapCreator(size);
         },
         toolChanged(state, action: PayloadAction<Tool>) {
             state.tool = action.payload;
@@ -157,7 +174,8 @@ const mapSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addMatcher(isAnyOf(toolApplied, toolChanged, greedChanged,
-            startChanged, endChanged, mapChanged), (state) => {
+            startChanged, endChanged, mapRefreshed,
+            mapCreatorChanged, sizeChanged), (state) => {
                 state.findingCoordsInfo = {};
                 state.isSearhing = false;
                 state.isPavingWay = false;
@@ -166,6 +184,8 @@ const mapSlice = createSlice({
 })
 
 export const { toolApplied, toolChanged, greedChanged,
-    startChanged, endChanged, oneStepSearch, searchStarted, mapChanged } = mapSlice.actions;
+    startChanged, endChanged, oneStepSearch,
+    searchStarted, mapCreatorChanged,
+    sizeChanged, mapRefreshed } = mapSlice.actions;
 
 export default mapSlice.reducer;

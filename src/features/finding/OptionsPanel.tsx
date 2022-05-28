@@ -1,36 +1,26 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { mapCreatorInfos } from "../../common/consts";
-import { createMap } from "../../common/map";
 import ObjectSelect, { Selectable } from "../../common/ObjectSelect";
-import { createSize } from "../../common/size";
-import { greedChanged, mapChanged } from "./findingSlice";
+import { greedChanged, mapCreatorChanged, mapRefreshed } from "./findingSlice";
 import PathfinderInfo from "./PathfinderInfo";
 import SearchButton from "./SearchButton";
 import ToolSelect from "./ToolSelect";
 import { Button, Col, Row, Slider, Space } from 'antd';
-import { useState } from "react";
 import { ReloadOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
 import { useCallback } from "react";
 
 const OptionsPanel = () => {
     const dispatch = useAppDispatch();
-    const height = useAppSelector(state => state.map.length);
-    const width = useAppSelector(state => state.map[0].length);
     const sliderShift = useAppSelector(state => state.greed);
-    const [mapCreatorInfo, setMapCreatorInfo] = useState(mapCreatorInfos[0]);
+    const mapCreator = useAppSelector(state => state.mapCreator);
+    const mapCreatorInfo = mapCreatorInfos.find((info) => info.value === mapCreator) as Selectable; // not cool needs to be changed
 
     const onRefresh = useCallback(() => {
-        dispatch(mapChanged(createMap(mapCreatorInfo.value, createSize(height, width))));
-    }, [mapCreatorInfo.value, height, width])
-
-    useEffect(() => {
-        onRefresh();
-    }, [mapCreatorInfo , onRefresh]);
+        dispatch(mapRefreshed());
+    }, [])
 
     const onMapCreatorSelect = (mapCreatorInfo: Selectable) => {
-        setMapCreatorInfo(mapCreatorInfo);
-        dispatch(mapChanged(createMap(mapCreatorInfo.value, createSize(height, width))));
+        dispatch(mapCreatorChanged(mapCreatorInfo.value))
     }
 
     const onSlide = (value: number) => {

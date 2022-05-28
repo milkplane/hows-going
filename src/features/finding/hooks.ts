@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { areEqualCoords, Coords, createCoords } from "../../common/coords";
 import { createMap } from "../../common/map";
 import { createSize } from "../../common/size";
-import { endChanged, mapChanged, oneStepSearch, startChanged, toolApplied } from "./findingSlice";
+import { endChanged, oneStepSearch, sizeChanged, startChanged, toolApplied } from "./findingSlice";
 import flat from "./mapCreators/flat";
 
 export const useTool = (coords: Coords) => {
@@ -99,7 +99,7 @@ export const useMapResize = <T extends HTMLElement>(dividingSquareSideLength: nu
             Math.floor(containerRef.current.clientHeight / dividingSquareSideLength),
             Math.floor(containerRef.current.clientWidth / dividingSquareSideLength),
         );
-        dispatch(mapChanged(createMap(flat, newSize)))
+        dispatch(sizeChanged(newSize))
     }
 
     useEffect(() => {

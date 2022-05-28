@@ -1,8 +1,15 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
 import finding from '../features/finding/findingSlice';
 
 export const store = configureStore({
-  reducer: finding
+  reducer: finding,
+  middleware: (getDefaultMiddleware) => 
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoreActions: true,
+        ignoredPaths: ['mapCreator'] // not cool
+      }
+    })
 });
 
 export type AppDispatch = typeof store.dispatch;
