@@ -36,11 +36,11 @@ const OptionsPanel = () => {
                 <Row justify="center">
                     <ObjectSelect objects={mapCreatorInfos} onSelect={onMapCreatorSelect} value={mapCreatorInfo} />
                     <Button onClick={onRefresh}>
-                        <ReloadOutlined style={{ fontSize: '16px', color: '#383838' }} />
+                        <ReloadOutlined style={{ fontSize: "16px", color: "#383838" }} />
                     </Button>
                 </Row>
                 <Row justify="center">
-                    <Space direction="vertical">
+                    <Space direction="vertical" style={{width: "63%"}}>
                         <p>Жадность поиска</p>
                         <Slider min={0} max={1} step={0.01} value={sliderShift} onChange={onSlide} />
                     </Space>
