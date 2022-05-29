@@ -12,8 +12,8 @@ import { CellType } from "./cell";
 export const mapCreatorInfos: Selectable[] = [
     {
         id: 1,
-        toString: () => "Плоская поверхонсть",
-        value: flat,
+        toString: () => "Лабиринт",
+        value: maze,
     },
     {
         id: 2,
@@ -22,9 +22,10 @@ export const mapCreatorInfos: Selectable[] = [
     },
     {
         id: 3,
-        toString: () => "Лабиринт",
-        value: maze,
-    }
+        toString: () => "Плоская поверхонсть",
+        value: flat,
+    },
+
 ]
 
 export const toolsInfo = [

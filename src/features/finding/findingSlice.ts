@@ -1,6 +1,6 @@
 import { createSlice, current, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { CellType, getCellType, getRoughness } from "../../common/cell";
-import { toolsInfo } from "../../common/consts";
+import { mapCreatorInfos, toolsInfo } from "../../common/consts";
 import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import { Tool } from "../../common/createTool";
 import { createAppliedToolMap, createMap, getCell, MapCreator, MapData } from "../../common/map";
@@ -82,7 +82,7 @@ const canBePassed = (map: MapData, coords: Coords) => {
 
 
 const initialSize = createSize(30, 30);
-const initialMap = createMap(flat, initialSize);
+const initialMap = createMap(mapCreatorInfos[0].value, initialSize);
 const initialStart = createCoords(0, 0);
 const initialEnd = createCoords(0, 2);
 const initialGreed = 0.5; // 0 = Dijkstra's; 0.5 = A*; 1 = GBFS
@@ -92,8 +92,8 @@ const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, i
 
 const initialState: FindingState = {
     map: initialMap,
-    mapCreator: flat,
-    tool: toolsInfo[2].tool,
+    mapCreator: mapCreatorInfos[0].value,
+    tool: toolsInfo[0].tool,
     start: initialStart,
     end: initialEnd,
     visited: initialVisited,
