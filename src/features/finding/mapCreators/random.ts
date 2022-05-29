@@ -13,8 +13,8 @@ const createMoisturedCell = (height: number) => {
 }
 
 const createPlantedCell = (unsownCell: Cell) => {
-    const chance = Math.random() < 0.5 ? true : false; 
-    if (unsownCell.height > MIN_BUSH_HEIGHT && unsownCell.height < MAX_BUSH_HEIGHT && chance) {
+    const chance = Math.random() < 0.7 ? true : false; 
+    if (unsownCell.height > MIN_BUSH_HEIGHT + 0.2 && unsownCell.height < MAX_BUSH_HEIGHT && chance) {
         return changeCellType(unsownCell, CellType.Bush);
     }
 
@@ -24,11 +24,11 @@ const createPlantedCell = (unsownCell: Cell) => {
 const random: MapCreator = (size: Size) => {
     const simplex = new SimplexNoise();
     const flatMatrix = flat(size);
-    const zoom = 7;
+    const zoom = 12;
 
     for (let i = 0; i < size.height; i++) {
         for (let j = 0; j < size.width; j++) {
-            const cellHeight = simplex.noise2D(i / zoom, j / zoom) + 0.1;
+            const cellHeight = (simplex.noise2D(i / zoom, j / zoom) + 0.2) * 0.5;
             flatMatrix[i][j] = createPlantedCell(createMoisturedCell(cellHeight));
         }        
     }
