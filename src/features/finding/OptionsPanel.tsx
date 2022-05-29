@@ -8,6 +8,12 @@ import ToolSelect from "./ToolSelect";
 import { Button, Col, Row, Slider, Space } from 'antd';
 import { ReloadOutlined } from "@ant-design/icons";
 import { useCallback } from "react";
+import styled, { css } from "styled-components";
+
+const AppName = styled.h1`
+    font-size: 36px;
+    font-family: sans-serif;
+`
 
 const OptionsPanel = () => {
     const dispatch = useAppDispatch();
@@ -31,16 +37,21 @@ const OptionsPanel = () => {
         <Col span={16} style={{ justifyContent: 'center' }}>
             <Space direction="vertical" size={50}>
                 <Row justify="center">
-                    <h1>How's going</h1>
+                    <AppName>How's going</AppName>
                 </Row>
                 <Row justify="center">
-                    <ObjectSelect objects={mapCreatorInfos} onSelect={onMapCreatorSelect} value={mapCreatorInfo} />
-                    <Button onClick={onRefresh}>
-                        <ReloadOutlined style={{ fontSize: "16px", color: "#383838" }} />
-                    </Button>
+                    <Col span={18}>
+                        <ObjectSelect objects={mapCreatorInfos} onSelect={onMapCreatorSelect} value={mapCreatorInfo} />
+                    </Col>
+                    <Col span={4}>
+                        <Button onClick={onRefresh}>
+                            <ReloadOutlined style={{ fontSize: "16px", color: "#383838" }} />
+                        </Button>
+                    </Col>
+
                 </Row>
                 <Row justify="center">
-                    <Space direction="vertical" style={{width: "63%"}}>
+                    <Space direction="vertical" style={{ width: "80%" }}>
                         <p>Жадность поиска</p>
                         <Slider min={0} max={1} step={0.01} value={sliderShift} onChange={onSlide} />
                     </Space>
