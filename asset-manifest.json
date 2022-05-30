@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/frontend-challenge/static/css/main.3cbaaace.css",
-    "main.js": "/frontend-challenge/static/js/main.9602a79d.js",
-    "static/js/787.961d3b03.chunk.js": "/frontend-challenge/static/js/787.961d3b03.chunk.js",
-    "static/media/person.png": "/frontend-challenge/static/media/person.7fa4d6e57e6e9e5212ad.png",
-    "static/media/treasure-chest.png": "/frontend-challenge/static/media/treasure-chest.803b8b8b62d9929df91d.png",
-    "index.html": "/frontend-challenge/index.html",
-    "main.3cbaaace.css.map": "/frontend-challenge/static/css/main.3cbaaace.css.map",
-    "main.9602a79d.js.map": "/frontend-challenge/static/js/main.9602a79d.js.map",
-    "787.961d3b03.chunk.js.map": "/frontend-challenge/static/js/787.961d3b03.chunk.js.map"
+    "main.css": "/hows-going/static/css/main.3cbaaace.css",
+    "main.js": "/hows-going/static/js/main.a61fd380.js",
+    "static/js/787.961d3b03.chunk.js": "/hows-going/static/js/787.961d3b03.chunk.js",
+    "static/media/person.png": "/hows-going/static/media/person.7fa4d6e57e6e9e5212ad.png",
+    "static/media/treasure-chest.png": "/hows-going/static/media/treasure-chest.803b8b8b62d9929df91d.png",
+    "index.html": "/hows-going/index.html",
+    "main.3cbaaace.css.map": "/hows-going/static/css/main.3cbaaace.css.map",
+    "main.a61fd380.js.map": "/hows-going/static/js/main.a61fd380.js.map",
+    "787.961d3b03.chunk.js.map": "/hows-going/static/js/787.961d3b03.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3cbaaace.css",
-    "static/js/main.9602a79d.js"
+    "static/js/main.a61fd380.js"
   ]
 }
