@@ -7,8 +7,6 @@
 В этом приложение вы можете построить именно тот путь, который считаете лучшим. <br />
 Доступно по ссылке: https://milkplane.github.io/hows-it-going/ <br />
 
-![ezgif-2-588c4d5d2e](https://user-images.githubusercontent.com/61702636/154848211-2c165b93-a51f-47b6-9d90-bb2f58e04e0b.gif)
-
 ## Жадность
 
 Основной параметр поиска - жадность. <br />
