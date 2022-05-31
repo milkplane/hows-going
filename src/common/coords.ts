@@ -34,7 +34,16 @@ export const createShiftedCoords = (coords: Coords, shift: CoordsShift): Coords 
     }
 }
 
+export const getNeighboursCoords = (coords: Coords): Coords[] => {
+    return [
+        createShiftedCoords(coords, CoordsShift.Bottom),
+        createShiftedCoords(coords, CoordsShift.Top),
+        createShiftedCoords(coords, CoordsShift.Left),
+        createShiftedCoords(coords, CoordsShift.Right),
+    ]
+}
+
 export const areEqualCoords = (coords1: Coords, coords2: Coords) => {
     return coords1.i == coords2.i &&
-    coords1.j == coords2.j
+        coords1.j == coords2.j
 }

@@ -1,4 +1,5 @@
 import { Row } from "antd";
+import styled from "styled-components";
 import { useAppSelector } from "../../app/hooks";
 
 const isShortest = (greed: number) => {
@@ -15,14 +16,21 @@ const getSimilarName = (greed: number) => {
     }
 }
 
+const InfoContainer = styled(Row)`
+    min-height: 127px;
+    max-width: 350px;
+    padding: 20px;
+    background-color: #FFFDEA;
+`
+
 const PathfinderInfo = () => {
     const greed = useAppSelector(state => state.greed);
 
-    return <Row align="middle" style={{ minHeight: '127px', maxWidth: 350, padding: 20, backgroundColor: '#FFFDEA' }}>
+    return <InfoContainer align="middle">
         <p style={{ margin: 0 }}>
             Алгоритм похож на <strong>{getSimilarName(greed)}</strong> и <strong>{isShortest(greed) || 'не'} гарантирует</strong> найти кратчайший путь
         </p>
-    </Row>
+    </InfoContainer>
 }
 
 export default PathfinderInfo;

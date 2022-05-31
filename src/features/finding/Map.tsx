@@ -2,7 +2,7 @@ import { useAppSelector } from "../../app/hooks";
 import { useMapInteraction, useMapResize, useSearch } from "./hooks";
 import MapRow from "./MapRow";
 
-const Map = (props: any) => {
+const Map = () => {
     const height = useAppSelector(state => state.map.length);
     const start = useAppSelector(state => state.start);
     const end = useAppSelector(state => state.end);

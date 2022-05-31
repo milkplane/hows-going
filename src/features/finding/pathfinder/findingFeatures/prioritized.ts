@@ -39,9 +39,9 @@ const prioritized = <T>(areEqual: (vlaue1: T, value2: T) => boolean) => {
     }
 
     const isQueueEmpty = () => queue.length === 0;
-    
 
-    return {extractHighestPriority, isInQueue, addToQueue, isQueueEmpty, updatePriority};
+
+    return { extractHighestPriority, isInQueue, addToQueue, isQueueEmpty, updatePriority };
 }
 
 export default prioritized;

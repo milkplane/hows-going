@@ -5,13 +5,11 @@ import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import { Tool } from "../../common/createTool";
 import { createAppliedToolMap, createMap, getCell, MapCreator, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
-import flat from "./mapCreators/flat";
-import getSeeker from "./pathfinder/getPathfinder";
+import getPathfinder from "./pathfinder/getPathfinder";
 
 // do not split findingSlice into findingSlice/mapSlice/findingFlowSlice
 // finding generator or a function of the form (map, start, end) => [ checkedCoords: Coords[], path: Coords[] ]
 // needs to know the map (after creating map, tool applying, size changing, basically every available action)
-// but slice only have access to the section of state that they own
 
 export type HeuristicFunction = (current: Coords, end: Coords) => number;
 
@@ -80,20 +78,21 @@ const canBePassed = (map: MapData, coords: Coords) => {
     return type !== CellType.Bush;
 }
 
-
+const initialMapCreator = mapCreatorInfos[0].value;
+const initialTool = toolsInfo[0].tool;
 const initialSize = createSize(30, 30);
-const initialMap = createMap(mapCreatorInfos[0].value, initialSize);
+const initialMap = createMap(initialMapCreator, initialSize);
 const initialStart = createCoords(0, 0);
 const initialEnd = createCoords(0, 2);
 const initialGreed = 0.5; // 0 = Dijkstra's; 0.5 = A*; 1 = GBFS
-const [initialGetHeuristic, initialGetWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, 0.5);
-const inititalSeeker = getSeeker(initialGetHeuristic, initialGetWeight);
+const [initialGetHeuristic, initialGetWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, initialGreed);
+const inititalSeeker = getPathfinder(initialGetHeuristic, initialGetWeight);
 const [initialVisited, InitialPath] = inititalSeeker(initialMap, initialStart, initialEnd, canBePassed);
 
 const initialState: FindingState = {
     map: initialMap,
-    mapCreator: mapCreatorInfos[0].value,
-    tool: toolsInfo[0].tool,
+    mapCreator: initialMapCreator,
+    tool: initialTool,
     start: initialStart,
     end: initialEnd,
     visited: initialVisited,
@@ -169,7 +168,7 @@ const mapSlice = createSlice({
             state.isPavingWay = false;
             state.findingCoordsInfo = {};
             const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
-            [state.visited, state.path] = getSeeker(getHeuristic, getWeight)(state.map, state.start, state.end, canBePassed);
+            [state.visited, state.path] = getPathfinder(getHeuristic, getWeight)(state.map, state.start, state.end, canBePassed);
         }
     },
     extraReducers: (builder) => {

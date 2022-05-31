@@ -1,13 +1,12 @@
 import { Button } from "antd";
-import { CSSProperties } from "react";
+import styled from "styled-components";
 import { useAppDispatch } from "../../app/hooks"
 import { searchStarted } from "./findingSlice";
 
-
-const styles: CSSProperties = {
-    width: '90%',
-    height: 63,
-}
+const StyledButton = styled(Button)`
+    width: 90%;
+    height: 63px;
+`
 
 const SearchButton = () => {
     const dispatch = useAppDispatch();
@@ -16,9 +15,9 @@ const SearchButton = () => {
         dispatch(searchStarted());
     }
 
-    return <Button size="large" shape="round" style={styles} onClick={onClick}>
+    return <StyledButton size="large" shape="round" onClick={onClick}>
         Найти путь
-    </Button>
+    </StyledButton>
 }
 
 export default SearchButton

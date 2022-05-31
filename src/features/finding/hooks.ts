@@ -6,10 +6,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { areEqualCoords, Coords, createCoords } from "../../common/coords";
-import { createMap } from "../../common/map";
 import { createSize } from "../../common/size";
 import { endChanged, oneStepSearch, sizeChanged, startChanged, toolApplied } from "./findingSlice";
-import flat from "./mapCreators/flat";
 
 export const useTool = (coords: Coords) => {
     const dispatch = useAppDispatch();
@@ -88,6 +86,27 @@ export const useSearch = (rate: number) => {
 }
 
 
+export const useMapInteraction = (start: Coords, end: Coords) => {
+    const [hoveredCell, setHoveredCell] = useState<Coords>(createCoords(3, 3));
+    const handleToolPressed = useTool(hoveredCell);
+    const handleStartPressed = useGameObjectDrag(hoveredCell, startChanged);
+    const handleEngChanging = useGameObjectDrag(hoveredCell, endChanged);
+
+    //optimization
+    const onMapPressed = (event: MouseEvent<HTMLTableSectionElement>) => {
+        if (areEqualCoords(hoveredCell, start)) {
+            handleStartPressed(event);
+        } else if (areEqualCoords(hoveredCell, end)) {
+            handleEngChanging(event);
+        } else {
+            handleToolPressed(event);
+        }
+    }
+
+    return { onMapPressed, setHoveredCell };
+}
+
+
 export const useMapResize = <T extends HTMLElement>(dividingSquareSideLength: number) => {
     const containerRef = useRef<T>(null);
     const dispatch = useDispatch();
@@ -110,24 +129,4 @@ export const useMapResize = <T extends HTMLElement>(dividingSquareSideLength: nu
     }, [containerRef.current])
 
     return containerRef;
-}
-
-
-export const useMapInteraction = (start: Coords, end: Coords) => {
-    const [hoveredCell, setHoveredCell] = useState<Coords>(createCoords(3, 3));
-    const handleToolPressed = useTool(hoveredCell);
-    const handleStartPressed = useGameObjectDrag(hoveredCell, startChanged);
-    const handleEngChanging = useGameObjectDrag(hoveredCell, endChanged);
-
-    const onMapPressed = (event: MouseEvent<HTMLTableSectionElement>) => {
-        if (areEqualCoords(hoveredCell, start)) {
-            handleStartPressed(event);
-        } else if (areEqualCoords(hoveredCell, end)) {
-            handleEngChanging(event);
-        } else {
-            handleToolPressed(event);
-        }
-    }
-
-    return {onMapPressed, setHoveredCell};
 }

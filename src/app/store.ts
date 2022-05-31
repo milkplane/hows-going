@@ -3,7 +3,7 @@ import finding from '../features/finding/findingSlice';
 
 export const store = configureStore({
   reducer: finding,
-  middleware: (getDefaultMiddleware) => 
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoreActions: true,

@@ -6,12 +6,12 @@ import { arrayFromTree, createTree, expandTree } from "./tree";
 
 export type MapData = Cell[][];
 
+export type MapCreator = (size: Size) => MapData;
+
 export type MapChange = {
     coords: Coords;
     newCell: Cell;
 }
-
-export type MapCreator = (size: Size) => MapData;
 
 export type MapChanges = MapChange[];
 
@@ -20,7 +20,7 @@ export const formMap = (cellMatrix: Cell[][]): MapData => {
 }
 
 export const createMap = (create: MapCreator, size: Size) => {
-    return create(size);    
+    return create(size);
 }
 
 export const copyMap = (map: MapData): MapData => {
@@ -43,9 +43,9 @@ export const isInMap = (coords: Coords, map: MapData): boolean => {
 
 const getChangesFromTool = (map: MapData, tool: Tool, coords: Coords): MapChanges => {
     const canExpandTo = (coords: Coords) => isInMap(coords, map);
-    const areaRoot = expandTree(createTree(coords), tool.size, canExpandTo);
+    const toolAreaRoot = expandTree(createTree(coords), tool.size, canExpandTo);
     const getPressure = (distanceFromCenter: number) => (tool.size + 1 - distanceFromCenter) * tool.increaseRate;
-    const pressureInfos = arrayFromTree<number>(areaRoot, getPressure);
+    const pressureInfos = arrayFromTree<number>(toolAreaRoot, getPressure);
     return pressureInfos.map((info) => {
         const tooledHeight = info.mappedValue;
         const cell = increaseCellHeight(map[info.coords.i][info.coords.j], tooledHeight);
@@ -56,6 +56,7 @@ const getChangesFromTool = (map: MapData, tool: Tool, coords: Coords): MapChange
                 newCell: changeCellType(cell, tool.brushType),
             }
         }
+
         return {
             coords: info.coords,
             newCell: cell,

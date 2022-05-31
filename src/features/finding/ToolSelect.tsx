@@ -9,11 +9,16 @@ const ToolButton = styled.button`
     border: none;
     width: 25%;
     cursor: pointer;
-    opacity: ${props => props.disabled ? 1: 0.5};
+    opacity: ${props => props.disabled ? 1 : 0.5};
 
     :hover {
         opacity: 1;
     }
+`
+
+const ToolImage = styled.img`
+    width: 100%;
+    height: auto;
 `
 
 const ToolSelect = () => {
@@ -22,7 +27,7 @@ const ToolSelect = () => {
 
     const buttons = toolsInfo.map(toolInfo => {
         return <ToolButton key={toolInfo.id} onClick={() => dispatch(toolChanged(toolInfo.tool))} disabled={toolInfo.tool === selectedTool}>
-            <img style={{width: '100%', height: 'auto'}} src={toolInfo.img} />
+            <ToolImage src={toolInfo.img} />
         </ToolButton>
     });
 

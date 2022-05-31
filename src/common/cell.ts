@@ -47,8 +47,8 @@ const changeHeightForType = (height: number, type: CellType): number => {
 
 const shouldBeGround = (height: number, type: CellType): boolean => {
     return type === CellType.Bush && height > MAX_BUSH_HEIGHT ||
-    type === CellType.Bush && height < MIN_BUSH_HEIGHT ||
-    type === CellType.Water && height > MAX_WATER_HEIGHT;
+        type === CellType.Bush && height < MIN_BUSH_HEIGHT ||
+        type === CellType.Water && height > MAX_WATER_HEIGHT;
 }
 
 const changeTypeForHeight = (height: number, type: CellType): CellType => {
@@ -80,7 +80,7 @@ export const createCell = (height: number = 0, type: CellType = CellType.Ground)
         type: type
     }
 
-    return changeCellHeight(cell, height); 
+    return changeCellHeight(cell, height);
 }
 
 export const increaseCellHeight = (cell: Cell, value: number) => {
@@ -119,7 +119,7 @@ export const getShiftInHeight = (cell: Cell) => {
 export const getCellColor = (cell: Cell, getGradient: CellColorGetter) => {
     const color = getGradient(cell.type);
     const shift = getShiftInHeight(cell);
-    return getGradientColor(color, shift);    
+    return getGradientColor(color, shift);
 }
 
 export const getCellType = (cell: Cell) => cell.type;

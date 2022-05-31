@@ -1,7 +1,7 @@
-import { Coords, CoordsShift, createShiftedCoords, stringifyCoords } from "./coords";
+import { Coords, CoordsShift, createShiftedCoords, getNeighboursCoords, stringifyCoords } from "./coords";
 
 export type Tree = {
-    coords: Coords
+    coords: Coords;
     parent: Tree | null;
     descendants: Tree[];
 }
@@ -21,15 +21,6 @@ export const createTree = (coords: Coords, parent: Tree | null = null): Tree => 
         parent: parent,
         descendants: [],
     }
-}
-
-const getNeighboursCoords = (coords: Coords): Coords[] => {
-    return [
-        createShiftedCoords(coords, CoordsShift.Bottom),
-        createShiftedCoords(coords, CoordsShift.Top),
-        createShiftedCoords(coords, CoordsShift.Left),
-        createShiftedCoords(coords, CoordsShift.Right),
-    ]
 }
 
 const getDescendantsCoords = (coords: Coords, canExpandTo: ExpandableAreaChecker): Coords[] => {
@@ -57,12 +48,9 @@ export const expandTree = (root: Tree, expandCount: number, canExpandTo: Expanda
 
         while (queueBeforeNextExpand.length !== 0) {
             const current = queueBeforeNextExpand.shift() as Tree;
-
             const descendants = createDescendants(current, canExpandAndNotTaken);
             current.descendants = descendants;
-
             descendants.forEach(descendant => takenCoords.push(stringifyCoords(descendant.coords)));
-
             queue.push(...descendants);
         }
     }
@@ -76,7 +64,6 @@ export const arrayFromTree = <T>(tree: Tree, getValueBasedOnDepth: GetValueBased
         mappedValue,
         coords: tree.coords
     }
-
     let mappedInfos: MappedInfo<T>[] = [mappedInfo];
 
     tree.descendants.forEach(descendant => {

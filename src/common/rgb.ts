@@ -5,7 +5,7 @@ export type RGB = {
 }
 
 export const createColor = (red: number, green: number, blue: number) => {
-    return  {
+    return {
         red,
         green,
         blue,
@@ -64,7 +64,7 @@ export const getGradientColor = (gradient: Gradient, shift: number): RGB => {
     const firstColorIndex = secondColorIndex - 1;
     const firstColorPoint = gradient.pointColors[firstColorIndex];
     const secondColorPoint = gradient.pointColors[secondColorIndex];
-    const shiftInColor = (shift - firstColorPoint.shift) / (secondColorPoint.shift - firstColorPoint.shift );
+    const shiftInColor = (shift - firstColorPoint.shift) / (secondColorPoint.shift - firstColorPoint.shift);
 
     return getColorBetween(firstColorPoint.color, secondColorPoint.color, shiftInColor);
 }

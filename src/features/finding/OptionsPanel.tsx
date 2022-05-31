@@ -8,7 +8,7 @@ import ToolSelect from "./ToolSelect";
 import { Button, Col, Row, Slider, Space } from 'antd';
 import { ReloadOutlined } from "@ant-design/icons";
 import { useCallback } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -37,7 +37,7 @@ const OptionsPanel = () => {
         <Col span={16} style={{ justifyContent: 'center' }}>
             <Space direction="vertical" size={50}>
                 <Row justify="center">
-                    <AppName>How's going</AppName>
+                    <AppName>How's it going</AppName>
                 </Row>
                 <Row justify="center">
                     <Col span={18}>
@@ -48,7 +48,6 @@ const OptionsPanel = () => {
                             <ReloadOutlined style={{ fontSize: "16px", color: "#383838" }} />
                         </Button>
                     </Col>
-
                 </Row>
                 <Row justify="center">
                     <Space direction="vertical" style={{ width: "80%" }}>
