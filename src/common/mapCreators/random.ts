@@ -1,7 +1,7 @@
 import SimplexNoise from 'simplex-noise';
-import { Cell, CellType, changeCellType, createCell, MAX_BUSH_HEIGHT, MAX_WATER_HEIGHT, MIN_BUSH_HEIGHT } from '../../../common/cell';
-import { MapCreator } from '../../../common/map';
-import { Size } from '../../../common/size';
+import { Cell, CellType, changeCellType, createCell, MAX_BUSH_HEIGHT, MAX_WATER_HEIGHT, MIN_BUSH_HEIGHT } from '../cell';
+import { MapCreator } from '../map';
+import { Size } from '../size';
 import flat from './flat';
 
 const createMoisturedCell = (height: number) => {

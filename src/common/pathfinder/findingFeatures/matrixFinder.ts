@@ -1,4 +1,4 @@
-import { Coords, stringifyCoords } from "../../../../common/coords";
+import { Coords, stringifyCoords } from "../../coords";
 
 const matrixFinder = () => {
     const takenCoords: { [key: string]: boolean } = {};

@@ -1,30 +1,15 @@
-import { createSlice, current, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { CellType, getCellType, getRoughness } from "../../common/cell";
 import { mapCreatorInfos, toolsInfo } from "../../common/consts";
 import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import { Tool } from "../../common/createTool";
 import { createAppliedToolMap, createMap, getCell, MapCreator, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
-import getPathfinder from "./pathfinder/getPathfinder";
+import getPathfinder, { HeuristicFunction, WeightGetter } from "../../common/pathfinder/getPathfinder";
 
 // do not split findingSlice into findingSlice/mapSlice/findingFlowSlice
 // finding generator or a function of the form (map, start, end) => [ checkedCoords: Coords[], path: Coords[] ]
 // needs to know the map (after creating map, tool applying, size changing, basically every available action)
-
-export type HeuristicFunction = (current: Coords, end: Coords) => number;
-
-export type WeightGetter = (map: MapData, coords: Coords) => number;
-
-export type SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => Pathfinder;
-
-export type CanBePassed = (map: MapData, coords: Coords) => boolean;
-
-export type Pathfinder = (map: MapData, start: Coords, end: Coords, canExpandTo: CanBePassed) => SearchResult;
-
-export type SearchResult = [
-    checked: Coords[],
-    path: Coords[]
-]
 
 type SearchInfoTable = {
     [key: string]: SearchCoordsInfo;

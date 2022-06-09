@@ -1,7 +1,7 @@
-import { CellType } from "../../../common/cell";
-import { Coords, createCoords } from "../../../common/coords";
-import { MapData } from "../../../common/map";
-import { createSize, Size } from "../../../common/size";
+import { CellType } from "../cell";
+import { Coords, createCoords } from "../coords";
+import { MapData } from "../map";
+import { createSize, Size } from "../size";
 import flat from "./flat";
 
 enum Orientation {

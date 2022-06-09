@@ -1,9 +1,23 @@
-import { areEqualCoords, Coords, stringifyCoords } from "../../../common/coords";
-import { isInMap, MapData } from "../../../common/map";
-import { areEqualTree, createTree, expandTree, getPathToRoot, Tree } from "../../../common/tree";
-import { CanBePassed, HeuristicFunction, SearchConfigurator, SearchResult, WeightGetter } from "../findingSlice";
+import { areEqualCoords, Coords, stringifyCoords } from "../coords";
+import { isInMap, MapData } from "../map";
+import { areEqualTree, createTree, expandTree, getPathToRoot, Tree } from "../tree";
 import matrixFinder from "./findingFeatures/matrixFinder";
 import prioritized from "./findingFeatures/prioritized";
+
+export type HeuristicFunction = (current: Coords, end: Coords) => number;
+
+export type WeightGetter = (map: MapData, coords: Coords) => number;
+
+export type SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => Pathfinder;
+
+export type CanBePassed = (map: MapData, coords: Coords) => boolean;
+
+export type Pathfinder = (map: MapData, start: Coords, end: Coords, canExpandTo: CanBePassed) => SearchResult;
+
+export type SearchResult = [
+    checked: Coords[],
+    path: Coords[]
+]
 
 type MappedCoords = {
     [key: string]: number;
