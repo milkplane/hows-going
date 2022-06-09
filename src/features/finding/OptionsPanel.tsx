@@ -1,14 +1,11 @@
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { mapCreatorInfos } from "../../common/consts";
-import ObjectSelect, { Selectable } from "../../common/ObjectSelect";
-import { greedChanged, mapCreatorChanged } from "./findingSlice";
 import PathfinderInfo from "./PathfinderInfo";
 import SearchButton from "./SearchButton";
 import ToolSelect from "./ToolSelect";
-import { Col, Row, Slider, Space } from 'antd';
+import { Col, Row, Space } from 'antd';
 import styled from "styled-components";
 import RefreshButton from "./RefreshButton";
 import GreedSlider from "./GreedSlider";
+import MapCreatorSelect from "./MapCreatorSelect";
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -16,14 +13,6 @@ const AppName = styled.h1`
 `
 
 const OptionsPanel = () => {
-    const dispatch = useAppDispatch();
-    const mapCreator = useAppSelector(state => state.mapCreator);
-    const mapCreatorInfo = mapCreatorInfos.find((info) => info.value === mapCreator) as Selectable; // not cool needs to be changed
-
-    const onMapCreatorSelect = (mapCreatorInfo: Selectable) => {
-        dispatch(mapCreatorChanged(mapCreatorInfo.value))
-    }
-
     return <Row justify="center" align="middle">
         <Col span={16} style={{ justifyContent: 'center' }}>
             <Space direction="vertical" size={50}>
@@ -32,7 +21,7 @@ const OptionsPanel = () => {
                 </Row>
                 <Row justify="center">
                     <Col span={18}>
-                        <ObjectSelect objects={mapCreatorInfos} onSelect={onMapCreatorSelect} value={mapCreatorInfo} />
+                        <MapCreatorSelect/>
                     </Col>
                     <Col span={4}>
                         <RefreshButton/>
