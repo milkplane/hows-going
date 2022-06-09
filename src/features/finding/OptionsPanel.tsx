@@ -1,14 +1,13 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { mapCreatorInfos } from "../../common/consts";
 import ObjectSelect, { Selectable } from "../../common/ObjectSelect";
-import { greedChanged, mapCreatorChanged, mapRefreshed } from "./findingSlice";
+import { greedChanged, mapCreatorChanged } from "./findingSlice";
 import PathfinderInfo from "./PathfinderInfo";
 import SearchButton from "./SearchButton";
 import ToolSelect from "./ToolSelect";
-import { Button, Col, Row, Slider, Space } from 'antd';
-import { ReloadOutlined } from "@ant-design/icons";
-import { useCallback } from "react";
+import { Col, Row, Slider, Space } from 'antd';
 import styled from "styled-components";
+import RefreshButton from "./RefreshButton";
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -20,10 +19,6 @@ const OptionsPanel = () => {
     const sliderShift = useAppSelector(state => state.greed);
     const mapCreator = useAppSelector(state => state.mapCreator);
     const mapCreatorInfo = mapCreatorInfos.find((info) => info.value === mapCreator) as Selectable; // not cool needs to be changed
-
-    const onRefresh = useCallback(() => {
-        dispatch(mapRefreshed());
-    }, [])
 
     const onMapCreatorSelect = (mapCreatorInfo: Selectable) => {
         dispatch(mapCreatorChanged(mapCreatorInfo.value))
@@ -44,9 +39,7 @@ const OptionsPanel = () => {
                         <ObjectSelect objects={mapCreatorInfos} onSelect={onMapCreatorSelect} value={mapCreatorInfo} />
                     </Col>
                     <Col span={4}>
-                        <Button onClick={onRefresh}>
-                            <ReloadOutlined style={{ fontSize: "16px", color: "#383838" }} />
-                        </Button>
+                        <RefreshButton/>
                     </Col>
                 </Row>
                 <Row justify="center">
