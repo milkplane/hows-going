@@ -8,6 +8,7 @@ import ToolSelect from "./ToolSelect";
 import { Col, Row, Slider, Space } from 'antd';
 import styled from "styled-components";
 import RefreshButton from "./RefreshButton";
+import GreedSlider from "./GreedSlider";
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -16,16 +17,11 @@ const AppName = styled.h1`
 
 const OptionsPanel = () => {
     const dispatch = useAppDispatch();
-    const sliderShift = useAppSelector(state => state.greed);
     const mapCreator = useAppSelector(state => state.mapCreator);
     const mapCreatorInfo = mapCreatorInfos.find((info) => info.value === mapCreator) as Selectable; // not cool needs to be changed
 
     const onMapCreatorSelect = (mapCreatorInfo: Selectable) => {
         dispatch(mapCreatorChanged(mapCreatorInfo.value))
-    }
-
-    const onSlide = (value: number) => {
-        dispatch(greedChanged(value));
     }
 
     return <Row justify="center" align="middle">
@@ -45,7 +41,7 @@ const OptionsPanel = () => {
                 <Row justify="center">
                     <Space direction="vertical" style={{ width: "80%" }}>
                         <p>Жадность поиска</p>
-                        <Slider min={0} max={1} step={0.01} value={sliderShift} onChange={onSlide} />
+                        <GreedSlider/>
                     </Space>
                 </Row>
                 <Row justify="center">
