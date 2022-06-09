@@ -3,9 +3,8 @@ import SearchButton from "./SearchButton";
 import ToolSelect from "./ToolSelect";
 import { Col, Row, Space } from 'antd';
 import styled from "styled-components";
-import RefreshButton from "./RefreshButton";
 import GreedSlider from "./GreedSlider";
-import MapCreatorSelect from "./MapCreatorSelect";
+import MapChanger from "./MapChanger";
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -20,12 +19,7 @@ const OptionsPanel = () => {
                     <AppName>How's it going</AppName>
                 </Row>
                 <Row justify="center">
-                    <Col span={18}>
-                        <MapCreatorSelect/>
-                    </Col>
-                    <Col span={4}>
-                        <RefreshButton/>
-                    </Col>
+                    <MapChanger/>
                 </Row>
                 <Row justify="center">
                     <Space direction="vertical" style={{ width: "80%" }}>
