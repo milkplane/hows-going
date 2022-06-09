@@ -1,13 +1,13 @@
 import React from 'react';
 import Map from './features/finding/Map';
 import OptionsPanel from './features/finding/OptionsPanel';
-import { Col, Row, Space } from 'antd';
+import { Col, Row } from 'antd';
 import MapChanger from './features/finding/MapChanger';
-import GreedSlider from './features/finding/GreedSlider';
 import ToolSelect from './features/finding/ToolSelect';
 import SearchButton from './features/finding/SearchButton';
 import styled from 'styled-components';
 import PathfinderInfo from './features/finding/PathfinderInfo';
+import GreedSlot from './features/finding/GreedSlot';
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -22,10 +22,7 @@ function App() {
           <OptionsPanel>
             <AppName>How's it going</AppName>
             <MapChanger />
-            <Space direction="vertical" style={{ width: "80%" }}>
-              <p>Жадность поиска</p>
-              <GreedSlider />
-            </Space>
+            <GreedSlot/>
             <PathfinderInfo/>
             <ToolSelect/>
             <SearchButton />
