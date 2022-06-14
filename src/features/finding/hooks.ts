@@ -1,5 +1,5 @@
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { MouseEvent } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
@@ -122,10 +122,13 @@ export const useMapResize = <T extends HTMLElement>(dividingSquareSideLength: nu
     }
 
     useEffect(() => {
-        resizeMap();
-        window.addEventListener("resize", () => {
-            resizeMap();
-        })
+        if (! containerRef.current) return;
+        const sizeObserver = new ResizeObserver(resizeMap);
+        sizeObserver.observe(containerRef.current);
+
+        return () => {
+            sizeObserver.disconnect()
+        }
     }, [containerRef.current])
 
     return containerRef;
