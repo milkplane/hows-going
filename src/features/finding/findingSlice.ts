@@ -113,15 +113,8 @@ const mapSlice = createSlice({
         sizeChanged(state, action: PayloadAction<Size>) {
             state.size = action.payload;
         },
-        seedRefreshed: {
-            reducer: (state, action: PayloadAction<Seed>) => {
-                state.seed = action.payload;
-            },
-            prepare: () => {
-                return {
-                    payload: createSeed(),
-                }
-            }
+        seedChanged(state, action: PayloadAction<Seed>) {
+            state.seed = action.payload;
         },
         isLandscapedChanged(state, action: PayloadAction<boolean>) {
             state.isLandscaped = action.payload;
@@ -174,20 +167,21 @@ const mapSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addMatcher(isAnyOf(toolApplied, toolChanged, greedChanged,
-            startChanged, endChanged, sizeChanged), (state) => {
+            startChanged, endChanged, sizeChanged,
+            isLandscapedChanged, seedChanged, flatnessChanged), (state) => {
                 state.findingCoordsInfo = {};
                 state.isSearhing = false;
                 state.isPavingWay = false;
-        })
-        .addMatcher(isAnyOf(sizeChanged, isLandscapedChanged,
-            seedRefreshed, flatnessChanged), (state) => {
-                state.map = configurable(createMapConfig(
-                    state.size,
-                    state.flatness,
-                    state.isLandscaped,
-                    state.seed,
-                ))
-        })
+            })
+            .addMatcher(isAnyOf(sizeChanged, isLandscapedChanged,
+                seedChanged, flatnessChanged), (state) => {
+                    state.map = configurable(createMapConfig(
+                        state.size,
+                        state.flatness,
+                        state.isLandscaped,
+                        state.seed,
+                    ))
+                })
 
     }
 })
@@ -195,6 +189,6 @@ const mapSlice = createSlice({
 export const { toolApplied, toolChanged, greedChanged,
     startChanged, endChanged, oneStepSearch,
     searchStarted, flatnessChanged, isLandscapedChanged,
-    sizeChanged, seedRefreshed } = mapSlice.actions;
+    sizeChanged, seedChanged } = mapSlice.actions;
 
 export default mapSlice.reducer;
