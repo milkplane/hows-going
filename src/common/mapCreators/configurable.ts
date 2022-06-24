@@ -1,9 +1,9 @@
-import { createSeed, Seed } from "../seed";;
-import SimplexNoise from 'simplex-noise';
-import { CellType, createCell, isCellHeightAllowed } from '../cell';
-import { Size } from '../size';
-import flat from './flat';
-import landscape from "./landscape";
+import { createSeed, Seed } from "../seed";
+import { Size, toStringSize } from '../size';
+import { Coords } from "../coords";
+import { createNoise, formMapFromNoise, Noise } from "./noise";
+import { createFlattenMap, createLandscapedMap, createMoisturedMap, MapData } from "../map";
+import createBushCoords from "./createBushCoords";
 
 export type MapConfig = {
     seed: Seed;
@@ -11,6 +11,8 @@ export type MapConfig = {
     flatness: number; // [0, 1];
     isLandscaped: boolean;
 }
+
+type HashedEntry = [noise: Noise, bushes: Coords[]];
 
 export const createMapConfig = (size: Size,
     flatness: number = 1,
@@ -24,29 +26,28 @@ export const createMapConfig = (size: Size,
     }
 }
 
-const createMoisturedCell = (height: number) => {
-    if (isCellHeightAllowed(height, CellType.Water)) {
-        return createCell(height, CellType.Water)
-    }
+const mergeNoiseIntoMap = (noise: Noise, bushes: Coords[], flatness: number): MapData => {
+    const rawMap = formMapFromNoise(noise);
+    const flattenMap = createFlattenMap(rawMap, 1 - flatness);
+    const moisturedMap = createMoisturedMap(flattenMap);
+    const landscapedMap = createLandscapedMap(moisturedMap, bushes);
 
-    return createCell(height);
+    return landscapedMap;
 }
 
-const configurable = (config: MapConfig) => {
-    const simplex = new SimplexNoise(config.seed);
-    const flatMatrix = flat(config.size);
-    const zoom = 12;
+const withHash = () => {
+    const hashed = new Map<Seed, HashedEntry>()
+    return (config: MapConfig) => {
+        const hash = toStringSize(config.size) + config.seed;
+        const entry = hashed.get(hash) ||
+        [createNoise(config.size), createBushCoords(config.size)];
 
-    for (let i = 0; i < config.size.height; i++) {
-        for (let j = 0; j < config.size.width; j++) {
-            const cellHeight = simplex.noise2D(i / zoom, j / zoom) * (1 - config.flatness); // flatness [0,1]
-            flatMatrix[i][j] = createMoisturedCell(cellHeight);
-        }
+        hashed.set(hash, entry);
+
+        return mergeNoiseIntoMap(entry[0], entry[1], config.flatness);
     }
-
-    landscape(flatMatrix)
-
-    return flatMatrix;
 }
+
+const configurable = withHash();
 
 export default configurable;

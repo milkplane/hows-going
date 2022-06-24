@@ -9,3 +9,5 @@ export const createSize = (height: number, width: number): Size => {
         width,
     }
 }
+
+export const toStringSize = (size: Size) => `${size.height}-${size.width}`

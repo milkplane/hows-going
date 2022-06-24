@@ -129,6 +129,14 @@ export const isCellHeightAllowed = (height: number, type: CellType) => {
     return true;
 }
 
+export const createMoisturedCell = (cell: Cell) => {
+    if (isCellHeightAllowed(cell.height, CellType.Water)) {
+        return createCell(cell.height, CellType.Water)
+    }
+
+    return createCell(cell.height);
+}
+
 export const getCellType = (cell: Cell) => cell.type;
 
 export const areEqualCells = (cell1: Cell, cell2: Cell) => {

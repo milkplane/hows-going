@@ -1,4 +1,4 @@
-import { Cell, changeCellHeight, changeCellType, copyCell, increaseCellHeight } from "./cell";
+import { Cell, CellType, changeCellHeight, changeCellType, copyCell, createMoisturedCell, increaseCellHeight, isCellHeightAllowed } from "./cell";
 import { Coords } from "./coords";
 import { Tool } from "./createTool";
 import { createSize, Size } from "./size";
@@ -83,4 +83,31 @@ export const getMapSize = (map: MapData) => {
     if (!map || !map[0]) return createSize(0, 0);
     
     return createSize(map.length, map[0].length);
+}
+
+export const createFlattenMap = (map: MapData, flatness: number): MapData => {
+    return map.map(row => {
+        return row.map(cell => changeCellHeight(cell, cell.height * flatness));
+    })
+}
+
+export const createMoisturedMap = (map: MapData): MapData => {
+    return map.map(row => {
+        return row.map(cell => createMoisturedCell(cell));
+    })
+}
+
+export const createLandscapedMap = (map: MapData, bushes: Coords[]): MapData => {
+    const mapCopy = copyMap(map);
+    bushes.forEach(bushCoords => {
+        const cell = getCell(mapCopy, bushCoords);
+        const isNotTooHigh = isCellHeightAllowed(cell.height, CellType.Bush);
+        const isNotWater = !isCellHeightAllowed(cell.height, CellType.Water);
+
+        if (isNotTooHigh && isNotWater) {
+            cell.type = CellType.Bush;
+        }
+    })
+
+    return mapCopy;
 }

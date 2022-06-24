@@ -1,8 +1,5 @@
-import { CellType } from "../cell";
 import { Coords, createCoords } from "../coords";
-import { MapData } from "../map";
 import { createSize, Size } from "../size";
-import flat from "./flat";
 
 enum Orientation {
     Horizontal,
@@ -63,12 +60,13 @@ const getRandomAllowedIndex = (orientation: Orientation, size: Size, offsetCoord
     return indexes[getRandomIntExclude(indexes.length)];
 }
 
-const drawLine = (orientation: Orientation, map: MapData, lineIndex: number,
+const drawLine = (orientation: Orientation, coords: Coords[], lineIndex: number,
     holeIndex: number, size: Size, offsetCoords: Coords) => {
     const from = orientation === Orientation.Horizontal ? offsetCoords.j : offsetCoords.i;
     const to = orientation === Orientation.Horizontal ? from + size.width : from + size.height;
-    const drawWall = orientation === Orientation.Horizontal ? (j: number) => map[lineIndex][j].type = CellType.Bush :
-        (i: number) => map[i][lineIndex].type = CellType.Bush;
+    const drawWall = orientation === Orientation.Horizontal ?
+        (j: number) => coords.push(createCoords(lineIndex, j)):
+        (i: number) => coords.push(createCoords(i, lineIndex));
 
     for (let i = from; i < to; i++) {
         if (i !== holeIndex) {
@@ -90,14 +88,14 @@ const getSubSizes = (orientation: Orientation, size: Size, offsetCoords: Coords,
     ]
 }
 
-const devideMatrix = (map: MapData, size: Size, offsetCoords: Coords) => {
+const devideMatrix = (coords: Coords[], size: Size, offsetCoords: Coords) => {
     if (isTooSmall(size)) return;
 
     const devideLineOrientation = getDevideOrientaion(size);
     const lineIndex = getRandomAllowedIndex(devideLineOrientation, size, offsetCoords, false);
     const holeIndex = getRandomAllowedIndex(devideLineOrientation, size, offsetCoords, true);
 
-    drawLine(devideLineOrientation, map, lineIndex, holeIndex, size, offsetCoords);
+    drawLine(devideLineOrientation, coords, lineIndex, holeIndex, size, offsetCoords);
 
     const [firstSubSize, secondSubSize] = getSubSizes(devideLineOrientation, size, offsetCoords, lineIndex);
     const firstSubCoords = offsetCoords;
@@ -105,15 +103,15 @@ const devideMatrix = (map: MapData, size: Size, offsetCoords: Coords) => {
         createCoords(1 + lineIndex, offsetCoords.j) :
         createCoords(offsetCoords.i, 1 + lineIndex);
 
-    devideMatrix(map, firstSubSize, firstSubCoords);
-    devideMatrix(map, secondSubSize, secondSubCoords);
+    devideMatrix(coords, firstSubSize, firstSubCoords);
+    devideMatrix(coords, secondSubSize, secondSubCoords);
 }
 
-const maze = (size: Size) => {
-    const map = flat(size);
-    devideMatrix(map, size, createCoords(0, 0));
+const createBushCoords = (size: Size) => {
+    const bushCoords: Coords[] = [];
+    devideMatrix(bushCoords, size, createCoords(0, 0));
 
-    return map;
+    return bushCoords;
 }
 
-export default maze;
+export default createBushCoords;
