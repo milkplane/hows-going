@@ -71,8 +71,10 @@ const getWallToBeDrawn = (map: MapData, i: number, lineIndex: number, orientatio
 
 const drawWall = (map: MapData, i: number, lineIndex: number, orientation: Orientation) => {
     const cell = getWallToBeDrawn(map, i, lineIndex, orientation);
+    const isNotWater = !isCellHeightAllowed(cell.height, CellType.Water);
+    const notTooHighForBush = isCellHeightAllowed(cell.height, CellType.Bush);
 
-    if (isCellHeightAllowed(cell.height, CellType.Bush)) {
+    if (notTooHighForBush && isNotWater) {
         cell.type = CellType.Bush;
     } 
 }
