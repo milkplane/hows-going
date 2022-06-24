@@ -1,6 +1,6 @@
 import { getGradientColor, Gradient } from "./rgb";
 
-export const MAX_WATER_HEIGHT = 0 - Number.EPSILON;
+export const MAX_WATER_HEIGHT = -0.07 - Number.EPSILON;
 export const MIN_BUSH_HEIGHT = -0.1 - Number.EPSILON;
 export const MAX_BUSH_HEIGHT = 0.3 - Number.EPSILON;
 export const MIN_HEIGHT = -1;
