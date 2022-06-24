@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import PathfinderInfo from './features/finding/PathfinderInfo';
 import GreedSlot from './features/finding/GreedSlot';
 import SeedSlot from './features/finding/SeedSlot';
+import FlatnessSlot from './features/finding/FlatnessSlot';
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -22,6 +23,7 @@ function App() {
           <OptionsPanel>
             <AppName>How's it going</AppName>
             <SeedSlot/>
+            <FlatnessSlot/>
             <GreedSlot/>
             <PathfinderInfo/>
             <ToolSelect/>
