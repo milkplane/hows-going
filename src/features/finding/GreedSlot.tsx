@@ -1,9 +1,11 @@
-import { Space } from "antd";
+import { Row, Space } from "antd";
 import GreedSlider from "./GreedSlider";
 
 const GreedSlot = () => {
     return <Space direction="vertical" style={{ width: "80%" }}>
-        <p>Жадность поиска</p>
+        <Row justify="center">
+            <p>Жадность поиска</p>
+        </Row>
         <GreedSlider />
     </Space>
 }
