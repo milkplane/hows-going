@@ -5,7 +5,7 @@ import { Size } from '../size';
 import flat from './flat';
 import landscape from "./landscape";
 
-type mapConfig = {
+export type MapConfig = {
     seed: Seed;
     size: Size;
     flatness: number; // [0, 1];
@@ -32,7 +32,7 @@ const createMoisturedCell = (height: number) => {
     return createCell(height);
 }
 
-const configurable = (config: mapConfig) => {
+const configurable = (config: MapConfig) => {
     const simplex = new SimplexNoise(config.seed);
     const flatMatrix = flat(config.size);
     const zoom = 12;
