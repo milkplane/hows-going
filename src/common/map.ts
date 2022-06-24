@@ -1,7 +1,7 @@
 import { Cell, changeCellHeight, changeCellType, copyCell, increaseCellHeight } from "./cell";
 import { Coords } from "./coords";
 import { Tool } from "./createTool";
-import { Size } from "./size";
+import { createSize, Size } from "./size";
 import { arrayFromTree, createTree, expandTree } from "./tree";
 
 export type MapData = Cell[][];
@@ -77,4 +77,10 @@ export const createAppliedToolMap = (map: MapData, tool: Tool, coords: Coords): 
 
 export const getCell = (map: MapData, coords: Coords) => {
     return map[coords.i][coords.j]
+}
+
+export const getMapSize = (map: MapData) => {
+    if (!map || !map[0]) return createSize(0, 0);
+    
+    return createSize(map.length, map[0].length);
 }

@@ -122,6 +122,13 @@ export const getCellColor = (cell: Cell, getGradient: CellColorGetter) => {
     return getGradientColor(color, shift);
 }
 
+export const isCellHeightAllowed = (height: number, type: CellType) => {
+    const minMax = getMinMaxHeight(type);
+    if (height < minMax[0]) return false;
+    if (height > minMax[1]) return false;
+    return true;
+}
+
 export const getCellType = (cell: Cell) => cell.type;
 
 export const areEqualCells = (cell1: Cell, cell2: Cell) => {
