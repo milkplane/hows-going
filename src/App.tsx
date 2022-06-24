@@ -7,6 +7,7 @@ import SearchButton from './features/finding/SearchButton';
 import styled from 'styled-components';
 import PathfinderInfo from './features/finding/PathfinderInfo';
 import GreedSlot from './features/finding/GreedSlot';
+import SeedSlot from './features/finding/SeedSlot';
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -20,6 +21,7 @@ function App() {
         <Row align='middle' justify='center' style={{ height: '100vh' }}>
           <OptionsPanel>
             <AppName>How's it going</AppName>
+            <SeedSlot/>
             <GreedSlot/>
             <PathfinderInfo/>
             <ToolSelect/>
