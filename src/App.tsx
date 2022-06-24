@@ -2,7 +2,6 @@ import React from 'react';
 import Map from './features/finding/Map';
 import OptionsPanel from './features/finding/OptionsPanel';
 import { Col, Row } from 'antd';
-import MapChanger from './features/finding/MapChanger';
 import ToolSelect from './features/finding/ToolSelect';
 import SearchButton from './features/finding/SearchButton';
 import styled from 'styled-components';
@@ -21,7 +20,6 @@ function App() {
         <Row align='middle' justify='center' style={{ height: '100vh' }}>
           <OptionsPanel>
             <AppName>How's it going</AppName>
-            <MapChanger />
             <GreedSlot/>
             <PathfinderInfo/>
             <ToolSelect/>

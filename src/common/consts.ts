@@ -1,32 +1,9 @@
-import flat from "./mapCreators/flat";
-import maze from "./mapCreators/maze";
-import random from "./mapCreators/random";
 import createTool from "./createTool";
 import block from '../images/block.png';
 import water from '../images/water.png';
 import increase from '../images/groundUp.png';
 import decrease from '../images/groundDown.png';
-import { Selectable } from "./ObjectSelect";
 import { CellType } from "./cell";
-
-export const mapCreatorInfos: Selectable[] = [
-    {
-        id: 1,
-        toString: () => "Лабиринт",
-        value: maze,
-    },
-    {
-        id: 2,
-        toString: () => "Случайная поверхонсть",
-        value: random,
-    },
-    {
-        id: 3,
-        toString: () => "Плоская поверхонсть",
-        value: flat,
-    },
-
-]
 
 export const toolsInfo = [
     {
