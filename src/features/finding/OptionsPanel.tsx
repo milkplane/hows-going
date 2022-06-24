@@ -16,7 +16,7 @@ const OptionsPanel = (props: OptionsPanelProps) => {
 
     return <Row justify="center" align="middle">
         <Col span={16} style={{ justifyContent: 'center' }}>
-            <Space direction="vertical" size={50}>
+            <Space direction="vertical" size={30}>
                 {rows}
             </Space>
         </Col>
