@@ -1,5 +1,6 @@
+import { CellType, getCellType, getRoughness } from "../cell";
 import { areEqualCoords, Coords, stringifyCoords } from "../coords";
-import { isInMap, MapData } from "../map";
+import { getCell, isInMap, MapData } from "../map";
 import { areEqualTree, createTree, expandTree, getPathToRoot, Tree } from "../tree";
 import matrixFinder from "./findingFeatures/matrixFinder";
 import prioritized from "./findingFeatures/prioritized";
@@ -18,6 +19,38 @@ export type SearchResult = [
     checked: Coords[],
     path: Coords[]
 ]
+
+export const manhattanDistance: HeuristicFunction = (current: Coords, end: Coords) => {
+    return Math.abs(current.i - end.i) + Math.abs(current.j - end.j);
+}
+
+export const aquaphobicWeight: WeightGetter = (map: MapData, coords: Coords) => {
+    return Math.pow(getRoughness(getCell(map, coords), 3), 5);
+}
+
+const shiftedHeuristicGetter = (getHeuristic: HeuristicFunction, shift: number): HeuristicFunction => {
+    return (current: Coords, end: Coords) => getHeuristic(current, end) * shift;
+}
+
+const shiftedWeightGetter = (getWeight: WeightGetter, shift: number): WeightGetter => {
+    return (map: MapData, coords: Coords) => getWeight(map, coords) * shift;
+}
+
+export const shiftedApproximationFunctions = (getHeuristic: HeuristicFunction, getWeight: WeightGetter, shift: number): [HeuristicFunction, WeightGetter] => {
+    return [
+        shiftedHeuristicGetter(getHeuristic, shift),
+        shiftedWeightGetter(getWeight, 1 - shift), //range of greed [0, 1]
+    ]
+}
+
+export const fobbidenTypeToFind = (fobiddenType: CellType): CanBePassed => {
+    return (map: MapData, coords: Coords) => {
+        const type = getCellType(getCell(map, coords));
+
+        return type !== fobiddenType;
+    }
+}
+
 
 type MappedCoords = {
     [key: string]: number;
