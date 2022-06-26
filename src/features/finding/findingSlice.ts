@@ -5,7 +5,7 @@ import { Coords, createCoords, stringifyCoords } from "../../common/coords";
 import { Tool } from "../../common/createTool";
 import { createAppliedToolMap, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
-import getPathfinder, { aquaphobicWeight, fobbidenTypeToFind, manhattanDistance, shiftedApproximationFunctions } from "../../common/pathfinder/getPathfinder";
+import getPathfinder, { aquaphobicWeight, fobbidenTypeToFind, manhattanDistance, shiftedAssessmentGetters } from "../../common/pathfinder/getPathfinder";
 import configurable, { createMapConfig } from "../../common/mapCreators/configurable";
 import { createSeed, Seed } from "../../common/seed";
 
@@ -53,7 +53,7 @@ const map = configurable(createMapConfig(
 const start = createCoords(0, 0);
 const end = createCoords(0, 2);
 const greed = 0.5; // 0 = Dijkstra's; 0.5 = A*; 1 = GBFS
-const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, greed);
+const [getHeuristic, getWeight] = shiftedAssessmentGetters(manhattanDistance, aquaphobicWeight, greed);
 const seeker = getPathfinder(getHeuristic, getWeight);
 const [visited, path] = seeker(map, start, end, fobbidenTypeToFind(CellType.Bush));
 
@@ -132,7 +132,7 @@ const mapSlice = createSlice({
             state.isSearhing = true;
             state.isPavingWay = false;
             state.findingCoordsInfo = {};
-            const [getHeuristic, getWeight] = shiftedApproximationFunctions(manhattanDistance, aquaphobicWeight, state.greed);
+            const [getHeuristic, getWeight] = shiftedAssessmentGetters(manhattanDistance, aquaphobicWeight, state.greed);
             [state.visited, state.path] = getPathfinder(getHeuristic, getWeight)(state.map, state.start, state.end, fobbidenTypeToFind(CellType.Bush));
         }
     },
