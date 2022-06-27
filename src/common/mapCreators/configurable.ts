@@ -3,7 +3,7 @@ import { Size, toStringSize } from '../size';
 import { Coords } from "../coords";
 import { createNoise, formMapFromNoise, Noise } from "./noise";
 import { createFlattenMap, createLandscapedMap, createMoisturedMap, MapData } from "../map";
-import createBushCoords from "./createBushCoords";
+import createBushCoords from "./maze";
 
 export type MapConfig = {
     seed: Seed;
