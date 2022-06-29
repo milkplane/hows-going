@@ -88,8 +88,8 @@ const mapSlice = createSlice({
         seedChanged(state, action: PayloadAction<Seed>) {
             state.seed = action.payload;
         },
-        isLandscapedChanged(state, action: PayloadAction<boolean>) {
-            state.isLandscaped = action.payload;
+        landscapeToggled(state) {
+            state.isLandscaped = !state.isLandscaped;
         },
         flatnessChanged(state, action: PayloadAction<number>) {
             state.flatness = action.payload;
@@ -140,12 +140,12 @@ const mapSlice = createSlice({
     extraReducers: (builder) => {
         builder.addMatcher(isAnyOf(toolApplied, toolChanged, greedChanged,
             startChanged, endChanged, sizeChanged,
-            isLandscapedChanged, seedChanged, flatnessChanged), (state) => {
+            landscapeToggled, seedChanged, flatnessChanged), (state) => {
                 state.findingCoordsInfo = {};
                 state.isSearhing = false;
                 state.isPavingWay = false;
             })
-            .addMatcher(isAnyOf(sizeChanged, isLandscapedChanged,
+            .addMatcher(isAnyOf(sizeChanged, landscapeToggled,
                 seedChanged, flatnessChanged), (state) => {
                     state.map = configurable(createMapConfig(
                         state.size,
@@ -160,7 +160,7 @@ const mapSlice = createSlice({
 
 export const { toolApplied, toolChanged, greedChanged,
     startChanged, endChanged, oneStepSearch,
-    searchStarted, flatnessChanged, isLandscapedChanged,
+    searchStarted, flatnessChanged, landscapeToggled,
     sizeChanged, seedChanged } = mapSlice.actions;
 
 export default mapSlice.reducer;

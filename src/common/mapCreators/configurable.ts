@@ -26,11 +26,11 @@ export const createMapConfig = (size: Size,
     }
 }
 
-const mergeNoiseIntoMap = (noise: Noise, bushes: Coords[], flatness: number): MapData => {
+const mergeNoiseIntoMap = (noise: Noise, bushes: Coords[], config: MapConfig): MapData => {
     const rawMap = formMapFromNoise(noise);
-    const flattenMap = createFlattenMap(rawMap, 1 - flatness);
+    const flattenMap = createFlattenMap(rawMap, 1 - config.flatness);
     const moisturedMap = createMoisturedMap(flattenMap);
-    const landscapedMap = createLandscapedMap(moisturedMap, bushes);
+    const landscapedMap = config.isLandscaped ? createLandscapedMap(moisturedMap, bushes) : moisturedMap;
 
     return landscapedMap;
 }
@@ -44,7 +44,7 @@ const withHash = () => {
 
         hashed.set(hash, entry);
 
-        return mergeNoiseIntoMap(entry[0], entry[1], config.flatness);
+        return mergeNoiseIntoMap(entry[0], entry[1], config);
     }
 }
 
