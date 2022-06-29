@@ -2,7 +2,9 @@ import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@redu
 import finding from '../features/finding/findingSlice';
 
 export const store = configureStore({
-  reducer: finding
+  reducer: {
+    finding,
+  }
 });
 
 export type AppDispatch = typeof store.dispatch;

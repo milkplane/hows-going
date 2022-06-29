@@ -1,6 +1,7 @@
 import { Row } from "antd";
 import styled from "styled-components";
 import { useAppSelector } from "../../app/hooks";
+import { selectGreed } from "./findingSlice";
 
 const isShortest = (greed: number) => {
     return greed <= 0.5;
@@ -24,7 +25,7 @@ const InfoContainer = styled(Row)`
 `
 
 const PathfinderInfo = () => {
-    const greed = useAppSelector(state => state.greed);
+    const greed = useAppSelector(selectGreed);
 
     return <InfoContainer align="middle">
         <p style={{ margin: 0 }}>

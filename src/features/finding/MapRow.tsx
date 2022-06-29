@@ -1,6 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
 import { Coords, createCoords } from "../../common/coords";
+import { selectMapRow } from "./findingSlice";
 import MapCell from "./MapCell";
 
 type MapRowInfo = {
@@ -9,7 +10,7 @@ type MapRowInfo = {
 }
 
 const MapRow = React.memo((props: MapRowInfo) => {
-    const rowData = useAppSelector(state => state.map[props.row]);
+    const rowData = useAppSelector(state => selectMapRow(state, props.row));
 
     const cells = [];
 

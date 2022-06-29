@@ -1,11 +1,12 @@
 import { useAppSelector } from "../../app/hooks";
+import { selectEnd, selectMapHeight, selectStart } from "./findingSlice";
 import { useMapInteraction, useMapResize, useSearch } from "./hooks";
 import MapRow from "./MapRow";
 
 const Map = () => {
-    const height = useAppSelector(state => state.map.length);
-    const start = useAppSelector(state => state.start);
-    const end = useAppSelector(state => state.end);
+    const height = useAppSelector(selectMapHeight);
+    const start = useAppSelector(selectStart);
+    const end = useAppSelector(selectEnd);
     const tableRef = useMapResize<HTMLTableElement>(35);
     const { onMapPressed, setHoveredCell } = useMapInteraction(start, end);
     useSearch(60);

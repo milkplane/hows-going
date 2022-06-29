@@ -1,9 +1,9 @@
 import { Slider } from "antd"
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { greedChanged } from "./findingSlice";
+import { greedChanged, selectGreed } from "./findingSlice";
 
 const GreedSlider = () => {
-    const sliderShift = useAppSelector(state => state.greed);
+    const sliderShift = useAppSelector(selectGreed);
     const dispatch = useAppDispatch();
 
     const onSlide = (value: number) => {

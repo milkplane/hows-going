@@ -6,6 +6,7 @@ import endImage from '../../images/treasure-chest.png'
 import startImage from '../../images/person.png'
 import styled, { css } from "styled-components";
 import { createColor, createGradient, createGradientPoint, getColorBetween, stringifyColor } from "../../common/rgb";
+import { selectIsEnd, selectIsStart, selectSearchInfo } from "./findingSlice";
 
 type CellProps = {
     coords: Coords;
@@ -64,9 +65,9 @@ const primaryPath = createColor(209, 164, 105);
 const primaryVisited = createColor(199, 199, 197);
 
 const MapCell = React.memo((props: CellProps) => {
-    const isStart = useAppSelector(state => areEqualCoords(props.coords, state.start));
-    const isEnd = useAppSelector(state => areEqualCoords(props.coords, state.end));
-    const searchInfo = useAppSelector(state => state.findingCoordsInfo[stringifyCoords(props.coords)]);
+    const isStart = useAppSelector(state => selectIsStart(state, props.coords));
+    const isEnd = useAppSelector(state => selectIsEnd(state, props.coords));
+    const searchInfo = useAppSelector(state => selectSearchInfo(state, props.coords));
     let terrainColor = getCellColor(props.cell, getTypedColor);
 
     if (searchInfo) {

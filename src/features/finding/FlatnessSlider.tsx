@@ -1,9 +1,9 @@
 import { Slider } from "antd"
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { flatnessChanged } from "./findingSlice";
+import { flatnessChanged, selectFlatness } from "./findingSlice";
 
 const FlatnessSlider = () => {
-    const sliderShift = useAppSelector(state => state.flatness);
+    const sliderShift = useAppSelector(selectFlatness);
     const dispatch = useAppDispatch();
 
     const onSlide = (value: number) => {

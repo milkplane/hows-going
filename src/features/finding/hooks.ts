@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { areEqualCoords, Coords, createCoords } from "../../common/coords";
 import { createSize } from "../../common/size";
-import { endChanged, oneStepSearch, sizeChanged, startChanged, toolApplied } from "./findingSlice";
+import { endChanged, oneStepSearch, selectIsPavingWay, selectIsSearching, sizeChanged, startChanged, toolApplied } from "./findingSlice";
 
 export const useTool = (coords: Coords) => {
     const dispatch = useAppDispatch();
@@ -65,8 +65,8 @@ export const useGameObjectDrag = (hoveredCell: Coords, objectChanged: ActionCrea
 
 
 export const useSearch = (rate: number) => {
-    const isSearhing = useAppSelector(state => state.isSearhing);
-    const isPavingWay = useAppSelector(state => state.isPavingWay)
+    const isSearhing = useAppSelector(selectIsSearching);
+    const isPavingWay = useAppSelector(selectIsPavingWay)
     const dispatch = useAppDispatch();
 
     useEffect(() => {

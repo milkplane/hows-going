@@ -1,13 +1,14 @@
 import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { CellType } from "../../common/cell";
 import { toolsInfo } from "../../common/consts";
-import { Coords, createCoords, stringifyCoords } from "../../common/coords";
+import { areEqualCoords, Coords, createCoords, stringifyCoords } from "../../common/coords";
 import { Tool } from "../../common/createTool";
 import { createAppliedToolMap, MapData } from "../../common/map";
 import { createSize, Size } from "../../common/size";
 import getPathfinder, { aquaphobicWeight, fobbidenTypeToFind, manhattanDistance, shiftedAssessmentGetters } from "../../common/pathfinder/getPathfinder";
 import configurable, { createMapConfig } from "../../common/mapCreators/configurable";
 import { createSeed, Seed } from "../../common/seed";
+import { RootState } from "../../app/store";
 
 // do not split findingSlice into findingSlice/mapSlice/findingFlowSlice
 // finding generator or a function of the form (map, start, end) => [ checkedCoords: Coords[], path: Coords[] ]
@@ -163,3 +164,23 @@ export const { toolApplied, toolChanged, greedChanged,
     sizeChanged, seedChanged } = mapSlice.actions;
 
 export default mapSlice.reducer;
+
+export const selectFlatness = (state: RootState) => state.finding.flatness;
+export const selectGreed = (state: RootState) => state.finding.greed;
+export const selectIslandScaped = (state: RootState) => state.finding.isLandscaped;
+export const selectSeed = (state: RootState) => state.finding.seed;
+export const selectTool = (state: RootState) => state.finding.tool;
+export const selectStart = (state: RootState) => state.finding.start;
+export const selectEnd = (state: RootState) => state.finding.end;
+export const selectIsPath = (state: RootState) => state.finding.path;
+export const selectIsVisited = (state: RootState) => state.finding.visited;
+export const selectIsSearching = (state: RootState) => state.finding.isSearhing;
+export const selectIsPavingWay = (state: RootState) => state.finding.isPavingWay;
+export const selectMapHeight = (state: RootState) => state.finding.map.length;
+export const selectIsStart = (state: RootState, coords: Coords) => areEqualCoords(state.finding.start, coords);
+export const selectIsEnd = (state: RootState, coords: Coords) => areEqualCoords(state.finding.end, coords);
+export const selectMapRow = (state: RootState, row: number) => state.finding.map[row];
+export const selectSearchInfo = (state: RootState, coords: Coords) => {
+    const stringifiedCoords = stringifyCoords(coords);
+    return state.finding.findingCoordsInfo[stringifiedCoords];
+};

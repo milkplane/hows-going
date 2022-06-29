@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { toolChanged } from "./findingSlice";
+import { selectTool, toolChanged } from "./findingSlice";
 import { Col, Row } from "antd";
 import styled from "styled-components";
 import { toolsInfo } from "../../common/consts";
@@ -23,7 +23,7 @@ const ToolImage = styled.img`
 
 const ToolSelect = () => {
     const dispatch = useAppDispatch();
-    const selectedTool = useAppSelector(state => state.tool);
+    const selectedTool = useAppSelector(selectTool);
 
     const buttons = toolsInfo.map(toolInfo => {
         return <ToolButton key={toolInfo.id} onClick={() => dispatch(toolChanged(toolInfo.tool))} disabled={toolInfo.tool === selectedTool}>
