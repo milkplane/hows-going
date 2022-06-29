@@ -13,6 +13,7 @@ export type MapConfig = {
 }
 
 type HashedEntry = [noise: Noise, bushes: Coords[]];
+type HashGetter = (config: MapConfig) => string;
 
 export const createMapConfig = (size: Size,
     flatness: number = 1,
@@ -35,12 +36,17 @@ const mergeNoiseIntoMap = (noise: Noise, bushes: Coords[], config: MapConfig): M
     return landscapedMap;
 }
 
-const withHash = () => {
+
+const getHashFromConfig = (config: MapConfig) => {
+    return toStringSize(config.size) + config.seed;
+}
+
+const withCaching = (getHash: HashGetter) => {
     const hashed = new Map<Seed, HashedEntry>()
     return (config: MapConfig) => {
-        const hash = toStringSize(config.size) + config.seed;
+        const hash = getHash(config);
         const entry = hashed.get(hash) ||
-        [createNoise(config.size), createBushCoords(config.size)];
+        [createNoise(config.size, config.seed), createBushCoords(config.size, config.seed)];
 
         hashed.set(hash, entry);
 
@@ -48,6 +54,6 @@ const withHash = () => {
     }
 }
 
-const configurable = withHash();
+const configurable = withCaching(getHashFromConfig);
 
 export default configurable;

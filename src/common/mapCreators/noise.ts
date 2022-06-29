@@ -1,12 +1,13 @@
 import SimplexNoise from "simplex-noise";
 import { Cell, createCell } from "../cell";
 import { formMap } from "../map";
+import { Seed } from "../seed";
 import { createSize, Size } from "../size";
 
 export type Noise = number[][];
 
-export const createNoise = (size: Size): Noise => {
-    const simplex = new SimplexNoise();
+export const createNoise = (size: Size, seed: Seed): Noise => {
+    const simplex = new SimplexNoise(seed);
     const zoom = 12;
     const noise: Noise = [];
 

@@ -1,5 +1,7 @@
 import { Coords, createCoords } from "../coords";
+import { Seed } from "../seed";
 import { createSize, Size } from "../size";
+import randomWithSeed, { RandomSeed } from "random-seed";
 
 enum Orientation {
     Horizontal,
@@ -10,8 +12,8 @@ const getDevideOrientaion = (size: Size) => {
     return size.height < size.width ? Orientation.Vertical : Orientation.Horizontal;
 }
 
-const getRandomIntExclude = (max: number) => {
-    return Math.floor(Math.random() * max);
+const getRandomIntExclude = (max: number, randomSeed: RandomSeed) => {
+    return Math.floor(randomSeed.random() * max);
 }
 
 const isTooSmall = (mazeSize: Size) => {
@@ -55,9 +57,9 @@ const getAllowedIndexes = (orientation: Orientation, size: Size, offsetCoords: C
 
 
 // Math.floor(Math.random() * (length / 2)) * 2 + offset ?
-const getRandomAllowedIndex = (orientation: Orientation, size: Size, offsetCoords: Coords, isHole: boolean) => {
+const getRandomAllowedIndex = (orientation: Orientation, size: Size, offsetCoords: Coords, isHole: boolean, randomSeed: RandomSeed) => {
     const indexes = getAllowedIndexes(orientation, size, offsetCoords, isHole);
-    return indexes[getRandomIntExclude(indexes.length)];
+    return indexes[getRandomIntExclude(indexes.length, randomSeed)];
 }
 
 const drawLine = (orientation: Orientation, coords: Coords[], lineIndex: number,
@@ -88,12 +90,12 @@ const getSubSizes = (orientation: Orientation, size: Size, offsetCoords: Coords,
     ]
 }
 
-const devideMatrix = (coords: Coords[], size: Size, offsetCoords: Coords) => {
+const devideMatrix = (coords: Coords[], size: Size, offsetCoords: Coords, randomSeed: RandomSeed) => {
     if (isTooSmall(size)) return;
 
     const devideLineOrientation = getDevideOrientaion(size);
-    const lineIndex = getRandomAllowedIndex(devideLineOrientation, size, offsetCoords, false);
-    const holeIndex = getRandomAllowedIndex(devideLineOrientation, size, offsetCoords, true);
+    const lineIndex = getRandomAllowedIndex(devideLineOrientation, size, offsetCoords, false, randomSeed);
+    const holeIndex = getRandomAllowedIndex(devideLineOrientation, size, offsetCoords, true, randomSeed);
 
     drawLine(devideLineOrientation, coords, lineIndex, holeIndex, size, offsetCoords);
 
@@ -103,13 +105,14 @@ const devideMatrix = (coords: Coords[], size: Size, offsetCoords: Coords) => {
         createCoords(1 + lineIndex, offsetCoords.j) :
         createCoords(offsetCoords.i, 1 + lineIndex);
 
-    devideMatrix(coords, firstSubSize, firstSubCoords);
-    devideMatrix(coords, secondSubSize, secondSubCoords);
+    devideMatrix(coords, firstSubSize, firstSubCoords, randomSeed);
+    devideMatrix(coords, secondSubSize, secondSubCoords, randomSeed);
 }
 
-const createBushCoords = (size: Size) => {
+const createBushCoords = (size: Size, seed: Seed) => {
     const bushCoords: Coords[] = [];
-    devideMatrix(bushCoords, size, createCoords(0, 0));
+    const randomSeed = randomWithSeed.create(seed);
+    devideMatrix(bushCoords, size, createCoords(0, 0), randomSeed);
 
     return bushCoords;
 }
