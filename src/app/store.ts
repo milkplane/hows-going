@@ -2,14 +2,7 @@ import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@redu
 import finding from '../features/finding/findingSlice';
 
 export const store = configureStore({
-  reducer: finding,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoreActions: true,
-        ignoredPaths: ['mapCreator'] // not cool
-      }
-    })
+  reducer: finding
 });
 
 export type AppDispatch = typeof store.dispatch;
