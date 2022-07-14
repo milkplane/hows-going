@@ -10,7 +10,7 @@ const GreedSlider = () => {
         dispatch(greedChanged(value));
     }
 
-    return <Slider min={0} max={1} step={0.01} value={sliderShift} onChange={onSlide} />
+    return <Slider min={0} max={1} step={0.01} value={sliderShift} onAfterChange={onSlide} />
 }
 
 export default GreedSlider;
