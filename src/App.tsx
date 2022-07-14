@@ -24,8 +24,8 @@ function App() {
           <OptionsPanel>
             <AppName>How's it going</AppName>
             <SeedSlot/>
-            <FlatnessSlot/>
             <LandscapeSlot/>
+            <FlatnessSlot/>
             <GreedSlot/>
             <PathfinderInfo/>
             <ToolSelect/>
