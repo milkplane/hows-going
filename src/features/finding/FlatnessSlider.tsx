@@ -1,5 +1,5 @@
-import { Slider } from "antd"
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import SliderSmoothAfterChange from "../../common/SliderSmoothAfterChange";
 import { flatnessChanged, selectFlatness } from "./findingSlice";
 
 const FlatnessSlider = () => {
@@ -11,7 +11,7 @@ const FlatnessSlider = () => {
     }
 
 
-    return <Slider min={0} max={1} step={0.01} value={sliderShift} onAfterChange={onSlide} />
+    return <SliderSmoothAfterChange min={0} max={1} step={0.01} value={sliderShift} onAfterChange={onSlide} />
 }
 
 export default FlatnessSlider;

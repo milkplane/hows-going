@@ -1,5 +1,5 @@
-import { Slider } from "antd"
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import SliderSmoothAfterChange from "../../common/SliderSmoothAfterChange";
 import { greedChanged, selectGreed } from "./findingSlice";
 
 const GreedSlider = () => {
@@ -10,7 +10,7 @@ const GreedSlider = () => {
         dispatch(greedChanged(value));
     }
 
-    return <Slider min={0} max={1} step={0.01} value={sliderShift} onAfterChange={onSlide} />
+    return <SliderSmoothAfterChange min={0} max={1} step={0.01} value={sliderShift} onAfterChange={onSlide} />
 }
 
 export default GreedSlider;
