@@ -36,10 +36,21 @@ const shiftedWeightGetter: ShiftedWeightGetter = (getWeight, shift) => {
     return (map, coords) => getWeight(map, coords) * shift;
 }
 
+
+// uses the equation
+//
+//          1
+// --------------------
+// 1 + e^(-15(x - 0.5))
+//
+// instead of linear y = x
+// to more rapidly ignore weight
+// -15 is taken to rapidly increase/decrese y only within range from 0 to 1 
 export const shiftedAssessmentGetters: ShiftedAssessmentGetters = (getHeuristic, getWeight, shift) => {
+    const balancedShift = 1 / (1 + Math.pow(Math.E, -15 *(shift - 0.5)));
     return [
-        shiftedHeuristicGetter(getHeuristic, shift),
-        shiftedWeightGetter(getWeight, 1 - shift), // UnitInterval [0, 1]
+        shiftedHeuristicGetter(getHeuristic, balancedShift),
+        shiftedWeightGetter(getWeight, 1 - balancedShift), // UnitInterval [0, 1]
     ]
 }
 
