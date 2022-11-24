@@ -56,8 +56,6 @@ export const fobbidenTypeToFind = (fobiddenType: CellType): CanBePassed => {
 }
 
 
-// still too nasty. It might be helpful to use function declaration to write the actual finding algorithm and below it its helper functions
-// original function can be found at the bottom of the file
 const getPathfinder: SearchConfigurator = (getHeuristic, getWeight) => {
     const { markAsTaken: markAsTakenCoords, isAlreadyTaken } = matrixFinder();
     const { addToQueue, isInQueue, isQueueEmpty,
@@ -155,60 +153,5 @@ const getPathfinder: SearchConfigurator = (getHeuristic, getWeight) => {
         return [checked, path];
     }
 }
-
-/*
-// !!! ORIGINAL FUNCTION !!!
-
-const getPathfinder: SearchConfigurator = (getHeuristic, getWeight) => {
-    const { markAsTaken, isAlreadyTaken } = matrixFinder();
-    const { addToQueue, isInQueue, isQueueEmpty,
-        extractHighestPriority, updatePriority } = prioritized<Tree>(areEqualTree);
-    const { setPathLength, getPathLength } = weighted();
-
-    return (map, start, end, canBePassed) => {
-        const checked: Coords[] = [];
-        let path: Coords[] = [];
-        const canExpandTo = (coords: Coords) => isInMap(coords, map) &&
-            !isAlreadyTaken(coords) &&
-            canBePassed(map, coords);
-
-        const root = createTree(start);
-        setPathLength(root.coords, 0);
-        addToQueue(root, 0);
-
-        while (!isQueueEmpty()) {
-            const current = extractHighestPriority();
-
-            if (areEqualCoords(current.coords, end)) {
-                checked.push(current.coords);
-                path = Array.from(getPathToRoot(current));
-                return [checked, path];
-            }
-
-            markAsTaken(current.coords);
-
-            for (let descendant of expandTree(current, 1, canExpandTo).descendants) {
-                const pathLength = getPathLength(current.coords) + getWeight(map, descendant.coords);
-
-                if (isInQueue(descendant) && pathLength >= getPathLength(descendant.coords)) continue;
-
-                setPathLength(descendant.coords, pathLength);
-                const heuristic = getHeuristic(descendant.coords, end);
-                const priority = pathLength + heuristic;
-
-                if (isInQueue(descendant)) {
-                    updatePriority(descendant, priority);
-                } else {
-                    addToQueue(descendant, priority);
-                }
-            }
-
-            checked.push(current.coords);
-        }
-
-        return [checked, path];
-    }
-}
-*/
 
 export default getPathfinder;
