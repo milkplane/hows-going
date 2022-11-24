@@ -10,6 +10,7 @@ import GreedSlot from './features/finding/GreedSlot';
 import SeedSlot from './features/finding/SeedSlot';
 import FlatnessSlot from './features/finding/FlatnessSlot';
 import LandscapeSlot from './features/finding/LandscapeSlot';
+import RandomnessSlot from './features/finding/RandomnessSlot';
 
 const AppName = styled.h1`
     font-size: 36px;
@@ -27,6 +28,7 @@ function App() {
             <LandscapeSlot/>
             <FlatnessSlot/>
             <GreedSlot/>
+            <RandomnessSlot/>
             <PathfinderInfo/>
             <ToolSelect/>
             <SearchButton />

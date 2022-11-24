@@ -1,10 +1,10 @@
 import { Row } from "antd";
 import styled from "styled-components";
 import { useAppSelector } from "../../app/hooks";
-import { selectGreed } from "./findingSlice";
+import { selectGreed, selectRandomness } from "./findingSlice";
 
-const isShortest = (greed: number) => {
-    return greed <= 0.5;
+const isShortest = (greed: number, randomness: number) => {
+    return greed <= 0.5 && randomness == 0;
 }
 
 const getSimilarName = (greed: number) => {
@@ -26,10 +26,11 @@ const InfoContainer = styled(Row)`
 
 const PathfinderInfo = () => {
     const greed = useAppSelector(selectGreed);
+    const randomness = useAppSelector(selectRandomness);
 
     return <InfoContainer align="middle">
         <p style={{ margin: 0 }}>
-            Алгоритм похож на <strong>{getSimilarName(greed)}</strong> и <strong>{isShortest(greed) || 'не'} гарантирует</strong> найти кратчайший путь
+            Алгоритм похож на <strong>{getSimilarName(greed)}</strong> и <strong>{isShortest(greed, randomness) || 'не'} гарантирует</strong> найти кратчайший путь
         </p>
     </InfoContainer>
 }

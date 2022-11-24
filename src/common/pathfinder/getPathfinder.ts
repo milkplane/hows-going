@@ -14,10 +14,10 @@ export type CanBePassed = (map: MapData, coords: Coords) => boolean;
 export type Pathfinder = (map: MapData, start: Coords, end: Coords, canExpandTo: CanBePassed) => SearchResult;
 export type SearchResult = [checked: Coords[], path: Coords[]];
 export type UnitInterval = number;
-export type ShiftedHeuristicGetter = (getHeuristic: HeuristicFunction, shift: UnitInterval) => HeuristicFunction;
-export type ShiftedWeightGetter = (aquaphobicWeight: AquaphobicWeightGetter, shift: UnitInterval) => WeightGetter;
+export type ShiftedHeuristicGetter = (getHeuristic: HeuristicFunction, shift: UnitInterval, randomness: UnitInterval) => HeuristicFunction;
+export type ShiftedWeightGetter = (aquaphobicWeight: AquaphobicWeightGetter, shift: UnitInterval, randomness: UnitInterval) => WeightGetter;
 export type AssessmentGetters = [HeuristicFunction, WeightGetter];
-export type ShiftedAssessmentGetters = (getHeuristic: HeuristicFunction, aquaphobicWeight: AquaphobicWeightGetter, shift: number) => AssessmentGetters;
+export type ShiftedAssessmentGetters = (getHeuristic: HeuristicFunction, aquaphobicWeight: AquaphobicWeightGetter, shift: number, randomness: UnitInterval) => AssessmentGetters;
 
 export const manhattanDistance: HeuristicFunction = (current, end) => {
     return Math.abs(current.i - end.i) + Math.abs(current.j - end.j);
@@ -29,18 +29,24 @@ export const aquaphobicWeight: AquaphobicWeightGetter = (map, coords, waterImpor
     return Math.pow(roughness, weightMuliplicator);
 }
 
-const shiftedHeuristicGetter: ShiftedHeuristicGetter = (getHeuristic, shift) => {
-    return (current, end) => getHeuristic(current, end) * shift;
+const shiftedHeuristicGetter: ShiftedHeuristicGetter = (getHeuristic, shift, randomness) => {
+    return (current, end) =>  {
+        const randomisedShift = shift * (1 - Math.random() * randomness);
+        return getHeuristic(current, end) * randomisedShift * (1 - randomness);
+    }
 }
 
-const shiftedWeightGetter: ShiftedWeightGetter = (aquaphobicWeight, shift) => {
-    return (map, coords) => aquaphobicWeight(map, coords, shift) * shift;
+const shiftedWeightGetter: ShiftedWeightGetter = (aquaphobicWeight, shift, randomness) => {
+    return (map, coords) => {
+        const randomisedShift = shift * (1 - Math.random() * randomness);
+        return aquaphobicWeight(map, coords, (1 - randomness) * randomisedShift) * randomisedShift;
+    }
 }
 
-export const shiftedAssessmentGetters: ShiftedAssessmentGetters = (getHeuristic, aquaphobicWeight, shift) => {
+export const shiftedAssessmentGetters: ShiftedAssessmentGetters = (getHeuristic, aquaphobicWeight, shift, randomness) => {
     return [
-        shiftedHeuristicGetter(getHeuristic, shift),
-        shiftedWeightGetter(aquaphobicWeight, 1 - shift),
+        shiftedHeuristicGetter(getHeuristic, shift, randomness),
+        shiftedWeightGetter(aquaphobicWeight, 1 - shift, randomness),
     ]
 }
 

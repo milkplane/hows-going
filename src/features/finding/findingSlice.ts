@@ -36,6 +36,7 @@ type FindingState = {
     path: Coords[];
     findingCoordsInfo: SearchInfoTable;
     greed: number;
+    randomness: number;
     isSearhing: boolean;
     isPavingWay: boolean;
 }
@@ -54,7 +55,8 @@ const map = configurable(createMapConfig(
 const start = createCoords(0, 0);
 const end = createCoords(0, 2);
 const greed = 0.5; // 0 = Dijkstra's; 0.5 = A*; 1 = GBFS
-const [getHeuristic, getWeight] = shiftedAssessmentGetters(manhattanDistance, aquaphobicWeight, greed);
+const randomness = 0;
+const [getHeuristic, getWeight] = shiftedAssessmentGetters(manhattanDistance, aquaphobicWeight, greed, randomness);
 const seeker = getPathfinder(getHeuristic, getWeight);
 const [visited, path] = seeker(map, start, end, fobbidenTypeToFind(CellType.Bush));
 
@@ -71,6 +73,7 @@ const initialState: FindingState = {
     path,
     findingCoordsInfo: {},
     greed,
+    randomness,
     isSearhing: true,
     isPavingWay: false,
 };
@@ -99,6 +102,9 @@ const mapSlice = createSlice({
         },
         greedChanged(state, action: PayloadAction<number>) {
             state.greed = action.payload;
+        },
+        randomnessChanged(state, action: PayloadAction<number>) {
+            state.randomness = action.payload;
         },
         startChanged(state, action: PayloadAction<Coords>) {
             state.start = action.payload;
@@ -133,7 +139,7 @@ const mapSlice = createSlice({
             state.isSearhing = true;
             state.isPavingWay = false;
             state.findingCoordsInfo = {};
-            const [getHeuristic, getWeight] = shiftedAssessmentGetters(manhattanDistance, aquaphobicWeight, state.greed);
+            const [getHeuristic, getWeight] = shiftedAssessmentGetters(manhattanDistance, aquaphobicWeight, state.greed, state.randomness);
             [state.visited, state.path] = getPathfinder(getHeuristic, getWeight)(state.map, state.start, state.end, fobbidenTypeToFind(CellType.Bush));
         }
     },
@@ -161,12 +167,13 @@ const mapSlice = createSlice({
 export const { toolApplied, toolChanged, greedChanged,
     startChanged, endChanged, oneStepSearch,
     searchStarted, flatnessChanged, landscapeToggled,
-    sizeChanged, seedChanged } = mapSlice.actions;
+    sizeChanged, seedChanged, randomnessChanged } = mapSlice.actions;
 
 export default mapSlice.reducer;
 
 export const selectFlatness = (state: RootState) => state.finding.flatness;
 export const selectGreed = (state: RootState) => state.finding.greed;
+export const selectRandomness = (state: RootState) => state.finding.randomness;
 export const selectIslandScaped = (state: RootState) => state.finding.isLandscaped;
 export const selectSeed = (state: RootState) => state.finding.seed;
 export const selectTool = (state: RootState) => state.finding.tool;
