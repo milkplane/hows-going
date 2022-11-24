@@ -90,7 +90,7 @@ export const increaseCellHeight = (cell: Cell, value: number) => {
 export const getRoughness = (cell: Cell, waterMultiplier: number = 50) => {
     let groundRoughness = Math.abs(cell.height) + 1;
 
-    if (cell.type === CellType.Water) groundRoughness *= waterMultiplier;
+    if (cell.type === CellType.Water) groundRoughness *= 1 + waterMultiplier;
 
     return groundRoughness;
 }

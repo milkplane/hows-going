@@ -24,9 +24,9 @@ export const manhattanDistance: HeuristicFunction = (current, end) => {
 }
 
 export const aquaphobicWeight: AquaphobicWeightGetter = (map, coords, waterImportanceShift = 1) => {
-    const waterMultiplicator = 5;
-    const roughness = getRoughness(getCell(map, coords), 3);
-    return Math.pow(roughness, waterMultiplicator * waterImportanceShift);
+    const weightMuliplicator = 4;
+    const roughness = getRoughness(getCell(map, coords), weightMuliplicator * waterImportanceShift);
+    return Math.pow(roughness, weightMuliplicator);
 }
 
 const shiftedHeuristicGetter: ShiftedHeuristicGetter = (getHeuristic, shift) => {
@@ -34,10 +34,7 @@ const shiftedHeuristicGetter: ShiftedHeuristicGetter = (getHeuristic, shift) => 
 }
 
 const shiftedWeightGetter: ShiftedWeightGetter = (aquaphobicWeight, shift) => {
-    return (map, coords) => {
-        console.log(aquaphobicWeight(map, coords, shift) * shift);
-        return aquaphobicWeight(map, coords, shift) * shift;
-    }
+    return (map, coords) => aquaphobicWeight(map, coords, shift) * shift;
 }
 
 export const shiftedAssessmentGetters: ShiftedAssessmentGetters = (getHeuristic, aquaphobicWeight, shift) => {
