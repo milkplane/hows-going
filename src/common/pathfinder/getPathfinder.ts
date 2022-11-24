@@ -8,49 +8,42 @@ import weighted from "./findingFeatures/weighted";
 
 export type HeuristicFunction = (current: Coords, end: Coords) => number;
 export type WeightGetter = (map: MapData, coords: Coords) => number;
+export type AquaphobicWeightGetter = (map: MapData, coords: Coords, waterImportanceShift: number) => number;
 export type SearchConfigurator = (getHeuristic: HeuristicFunction, getWeight: WeightGetter) => Pathfinder;
 export type CanBePassed = (map: MapData, coords: Coords) => boolean;
 export type Pathfinder = (map: MapData, start: Coords, end: Coords, canExpandTo: CanBePassed) => SearchResult;
 export type SearchResult = [checked: Coords[], path: Coords[]];
 export type UnitInterval = number;
 export type ShiftedHeuristicGetter = (getHeuristic: HeuristicFunction, shift: UnitInterval) => HeuristicFunction;
-export type ShiftedWeightGetter = (getWeight: WeightGetter, shift: UnitInterval) => WeightGetter;
+export type ShiftedWeightGetter = (aquaphobicWeight: AquaphobicWeightGetter, shift: UnitInterval) => WeightGetter;
 export type AssessmentGetters = [HeuristicFunction, WeightGetter];
-export type ShiftedAssessmentGetters = (getHeuristic: HeuristicFunction, getWeight: WeightGetter, shift: number) => AssessmentGetters;
+export type ShiftedAssessmentGetters = (getHeuristic: HeuristicFunction, aquaphobicWeight: AquaphobicWeightGetter, shift: number) => AssessmentGetters;
 
 export const manhattanDistance: HeuristicFunction = (current, end) => {
     return Math.abs(current.i - end.i) + Math.abs(current.j - end.j);
 }
 
-export const aquaphobicWeight: WeightGetter = (map, coords) => {
+export const aquaphobicWeight: AquaphobicWeightGetter = (map, coords, waterImportanceShift = 1) => {
     const waterMultiplicator = 5;
     const roughness = getRoughness(getCell(map, coords), 3);
-    return Math.pow(roughness, waterMultiplicator);
+    return Math.pow(roughness, waterMultiplicator * waterImportanceShift);
 }
 
 const shiftedHeuristicGetter: ShiftedHeuristicGetter = (getHeuristic, shift) => {
     return (current, end) => getHeuristic(current, end) * shift;
 }
 
-const shiftedWeightGetter: ShiftedWeightGetter = (getWeight, shift) => {
-    return (map, coords) => getWeight(map, coords) * shift;
+const shiftedWeightGetter: ShiftedWeightGetter = (aquaphobicWeight, shift) => {
+    return (map, coords) => {
+        console.log(aquaphobicWeight(map, coords, shift) * shift);
+        return aquaphobicWeight(map, coords, shift) * shift;
+    }
 }
 
-
-// uses the equation
-//
-//          1
-// --------------------
-// 1 + e^(-15(x - 0.5))
-//
-// instead of linear y = x
-// to more rapidly ignore weight
-// -15 is taken to rapidly increase/decrese y only within range from 0 to 1 
-export const shiftedAssessmentGetters: ShiftedAssessmentGetters = (getHeuristic, getWeight, shift) => {
-    const balancedShift = 1 / (1 + Math.pow(Math.E, -15 *(shift - 0.5)));
+export const shiftedAssessmentGetters: ShiftedAssessmentGetters = (getHeuristic, aquaphobicWeight, shift) => {
     return [
-        shiftedHeuristicGetter(getHeuristic, balancedShift),
-        shiftedWeightGetter(getWeight, 1 - balancedShift), // UnitInterval [0, 1]
+        shiftedHeuristicGetter(getHeuristic, shift),
+        shiftedWeightGetter(aquaphobicWeight, 1 - shift),
     ]
 }
 
