@@ -29,17 +29,19 @@ export const aquaphobicWeight: AquaphobicWeightGetter = (map, coords, waterImpor
     return Math.pow(roughness, weightMuliplicator);
 }
 
+// algorithm cannot operate on squares with no weight and no heuristic
+// so there must be at least one parameter with some value
 const shiftedHeuristicGetter: ShiftedHeuristicGetter = (getHeuristic, shift, randomness) => {
     return (current, end) =>  {
-        const randomisedShift = shift * (1 - Math.random() * randomness);
-        return getHeuristic(current, end) * randomisedShift * (1 - randomness);
+        const randomisedShift = shift * (1 - Math.random() * randomness) * (1 - randomness);
+        return getHeuristic(current, end) * randomisedShift + Math.random() * randomness;
     }
 }
 
 const shiftedWeightGetter: ShiftedWeightGetter = (aquaphobicWeight, shift, randomness) => {
     return (map, coords) => {
-        const randomisedShift = shift * (1 - Math.random() * randomness);
-        return aquaphobicWeight(map, coords, (1 - randomness) * randomisedShift) * randomisedShift;
+        const randomisedShift = shift * (1 - Math.random() * randomness) * (1 - randomness);
+        return aquaphobicWeight(map, coords, randomisedShift) * randomisedShift + randomness * Math.random();
     }
 }
 
